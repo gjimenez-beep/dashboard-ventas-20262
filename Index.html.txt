@@ -1,0 +1,1909 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Ventas en Vivo 2026</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js and DataLabels Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    
+    <!-- PapaParse for CSV reading -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .custom-shadow {
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Dark Mode Styling Overrides */
+        body.dark-mode {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+        }
+        body.dark-mode header,
+        body.dark-mode .bg-white {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            color: #f8fafc !important;
+        }
+        body.dark-mode h1, 
+        body.dark-mode h2, 
+        body.dark-mode h3, 
+        body.dark-mode h4, 
+        body.dark-mode th {
+            color: #f8fafc !important;
+        }
+        body.dark-mode p, 
+        body.dark-mode label, 
+        body.dark-mode td {
+            color: #cbd5e1 !important;
+        }
+        body.dark-mode .text-slate-900,
+        body.dark-mode .text-slate-800 {
+            color: #f8fafc !important;
+        }
+        body.dark-mode .text-slate-700,
+        body.dark-mode .text-slate-600 {
+            color: #e2e8f0 !important;
+        }
+        body.dark-mode .text-slate-500,
+        body.dark-mode .text-slate-400 {
+            color: #94a3b8 !important;
+        }
+        body.dark-mode select, 
+        body.dark-mode input {
+            background-color: #0f172a !important;
+            border-color: #334155 !important;
+            color: #f8fafc !important;
+        }
+        body.dark-mode nav {
+            background-color: #0f172a !important;
+            border-color: #334155 !important;
+        }
+        body.dark-mode nav button:not(.bg-white) {
+            color: #94a3b8 !important;
+        }
+        body.dark-mode nav button.bg-white {
+            background-color: #1e293b !important;
+            color: #818cf8 !important;
+        }
+        body.dark-mode .bg-slate-100, 
+        body.dark-mode .bg-slate-50 {
+            background-color: #334155 !important;
+            color: #f8fafc !important;
+        }
+        body.dark-mode .divide-slate-100 > :not([hidden]) ~ :not([hidden]) {
+            border-color: #334155 !important;
+        }
+        body.dark-mode .border-slate-200, 
+        body.dark-mode .border-slate-100 {
+            border-color: #334155 !important;
+        }
+        body.dark-mode .hover\:bg-slate-50:hover {
+            background-color: #334155 !important;
+        }
+        body.dark-mode #configModal .bg-white {
+            background-color: #1e293b !important;
+            color: #f8fafc !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800 pb-12">
+
+    <!-- Header Navbar -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Brand Title -->
+                <div class="flex items-center space-x-3">
+                    <div class="bg-indigo-600 text-white p-2.5 rounded-xl shadow-md flex items-center justify-center">
+                        <i class="fa-solid fa-chart-line text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-slate-900 leading-tight">Dashboard de Ventas</h1>
+                        <p class="text-xs text-slate-500 font-medium">Sincronizado en tiempo real desde Google Sheets</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs & Actions -->
+                <div class="flex items-center space-x-2 sm:space-x-4">
+                    <!-- Navigation Tabs -->
+                    <nav class="flex bg-slate-100 p-1 rounded-xl space-x-1 border border-slate-200/80">
+                        <button id="tabMainBtn" onclick="switchTab('main')" class="px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all duration-200 bg-white text-indigo-600 shadow-sm">
+                            <i class="fa-solid fa-house mr-1.5"></i>Principal 2026
+                        </button>
+                        <button id="tabYoYBtn" onclick="switchTab('yoy')" class="px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all duration-200 text-slate-600 hover:text-slate-900">
+                            <i class="fa-solid fa-code-compare mr-1.5"></i>Comparativo YoY
+                        </button>
+                    </nav>
+
+                    <!-- Refresh Button -->
+                    <button onclick="refreshData()" title="Sincronizar Datos" class="p-2 sm:px-3 sm:py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-medium rounded-xl transition border border-slate-200 flex items-center space-x-1.5">
+                        <i class="fa-solid fa-rotate-right text-slate-500" id="refreshIcon"></i>
+                        <span class="hidden sm:inline">Sincronizar</span>
+                    </button>
+
+                    <!-- Dark Mode Toggle Button -->
+                    <button onclick="toggleDarkMode()" id="darkModeBtn" title="Modo Oscuro / Claro" class="p-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition border border-slate-200">
+                        <i class="fa-solid fa-moon text-slate-600" id="darkModeIcon"></i>
+                    </button>
+
+                    <!-- Settings Button -->
+                    <button onclick="openConfigModal()" title="Configuración de Columnas" class="p-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition border border-slate-200">
+                        <i class="fa-solid fa-gear text-slate-600"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+
+        <!-- Status Indicator Bar -->
+        <div id="statusBanner" class="hidden mb-4 p-3 bg-indigo-50 border border-indigo-100 text-indigo-700 rounded-xl text-xs sm:text-sm flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-circle-info text-indigo-500"></i>
+                <span id="statusText">Cargando información...</span>
+            </div>
+            <span id="lastUpdatedText" class="text-xs text-indigo-500 font-medium">--:--</span>
+        </div>
+
+        <!-- Global Filters Panel -->
+        <section class="bg-white rounded-2xl p-4 sm:p-5 custom-shadow border border-slate-100 mb-6 transition-all">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-3 border-b border-slate-100">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-filter text-indigo-500 text-sm"></i>
+                    <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Filtros de Análisis</h2>
+                </div>
+                <button onclick="resetFilters()" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center space-x-1 self-start md:self-auto">
+                    <i class="fa-solid fa-arrow-rotate-left"></i>
+                    <span>Restablecer Filtros</span>
+                </button>
+            </div>
+
+            <!-- Filters Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mt-4">
+                <!-- Filter: Tienda -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Tienda / Sucursal</label>
+                    <select id="filterTienda" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-700 text-xs sm:text-sm rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
+                        <option value="ALL">Todas las Tiendas</option>
+                    </select>
+                </div>
+
+                <!-- Filter: Ambiente -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Ambiente</label>
+                    <select id="filterAmbiente" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-700 text-xs sm:text-sm rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
+                        <option value="ALL">Todos los Ambientes</option>
+                    </select>
+                </div>
+
+                <!-- Filter: Tipo de Producto -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Tipo de Producto</label>
+                    <select id="filterTipoProducto" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-700 text-xs sm:text-sm rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
+                        <option value="ALL">Todos los Tipos</option>
+                    </select>
+                </div>
+
+                <!-- Filter: Mes -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Mes</label>
+                    <select id="filterMes" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 text-slate-700 text-xs sm:text-sm rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
+                        <option value="ALL">Todos los Meses</option>
+                        <option value="0">Enero</option>
+                        <option value="1">Febrero</option>
+                        <option value="2">Marzo</option>
+                        <option value="3">Abril</option>
+                        <option value="4">Mayo</option>
+                        <option value="5">Junio</option>
+                        <option value="6">Julio</option>
+                        <option value="7">Agosto</option>
+                        <option value="8">Septiembre</option>
+                        <option value="9">Octubre</option>
+                        <option value="10">Noviembre</option>
+                        <option value="11">Diciembre</option>
+                    </select>
+                </div>
+
+                <!-- Search Input -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Búsqueda General</label>
+                    <div class="relative">
+                        <input type="text" id="filterSearch" onkeyup="applyFilters()" placeholder="Buscar producto, tienda..." class="w-full bg-slate-50 border border-slate-200 text-slate-700 text-xs sm:text-sm rounded-xl p-2.5 pl-8 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
+                        <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-3 text-slate-400 text-xs"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 1: MAIN DASHBOARD (2026) -->
+        <div id="viewMain" class="space-y-6">
+            
+            <!-- KPI Cards Grid -->
+            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+                <!-- KPI 1: Ventas + Impuestos -->
+                <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100 flex items-center justify-between hover:border-indigo-100 transition">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Ventas + Impuestos</p>
+                        <h3 id="kpiTotalSales" class="text-2xl font-bold text-slate-900 mt-1">$0.00</h3>
+                        <p class="text-xs text-indigo-600 font-medium mt-1">
+                            <i class="fa-solid fa-receipt mr-1"></i>Sumatoria Total 2026
+                        </p>
+                    </div>
+                    <div class="p-3.5 bg-indigo-50 text-indigo-600 rounded-2xl">
+                        <i class="fa-solid fa-sack-dollar text-xl"></i>
+                    </div>
+                </div>
+
+                <!-- KPI 2: Cantidad de Productos -->
+                <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100 flex items-center justify-between hover:border-blue-100 transition">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Cantidad de Productos</p>
+                        <h3 id="kpiTotalQty" class="text-2xl font-bold text-slate-900 mt-1">0</h3>
+                        <p id="kpiAvgQty" class="text-xs text-blue-600 font-medium mt-1">Prom. por Venta: 0 unid.</p>
+                    </div>
+                    <div class="p-3.5 bg-blue-50 text-blue-600 rounded-2xl">
+                        <i class="fa-solid fa-boxes-stacked text-xl"></i>
+                    </div>
+                </div>
+
+                <!-- KPI 3: Tienda Líder -->
+                <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100 flex items-center justify-between hover:border-emerald-100 transition">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tienda Líder</p>
+                        <h3 id="kpiTopStore" class="text-lg font-bold text-slate-900 mt-1 truncate max-w-[160px]">-</h3>
+                        <p id="kpiTopStoreAmount" class="text-xs text-emerald-600 font-medium mt-1">$0.00 en ventas</p>
+                    </div>
+                    <div class="p-3.5 bg-emerald-50 text-emerald-600 rounded-2xl">
+                        <i class="fa-solid fa-store text-xl"></i>
+                    </div>
+                </div>
+
+                <!-- KPI 4: Producto Estrella -->
+                <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100 flex items-center justify-between hover:border-amber-100 transition">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Producto Estrella</p>
+                        <h3 id="kpiTopProduct" class="text-lg font-bold text-slate-900 mt-1 truncate max-w-[160px]" title="Producto más vendido">-</h3>
+                        <p id="kpiTopProductAmount" class="text-xs text-amber-600 font-medium mt-1">0 unidades / $0.00</p>
+                    </div>
+                    <div class="p-3.5 bg-amber-50 text-amber-600 rounded-2xl">
+                        <i class="fa-solid fa-trophy text-xl"></i>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Charts Row 1: Ventas por Mes & Ventas por Tienda -->
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Chart: Ventas por Mes -->
+                <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                        <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center">
+                            <i class="fa-solid fa-calendar-days text-indigo-500 mr-2"></i>Ventas por Mes (2026)
+                        </h3>
+                        <span class="text-xs text-slate-400 font-medium">Tendencia Mensual</span>
+                    </div>
+                    <div class="relative h-64 sm:h-72 w-full">
+                        <canvas id="chartMonthly"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart: Ventas por Tienda -->
+                <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                        <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center">
+                            <i class="fa-solid fa-shop text-blue-500 mr-2"></i>Ventas por Tienda
+                        </h3>
+                        <span class="text-xs text-slate-400 font-medium">Comparativo Sucursales</span>
+                    </div>
+                    <div class="relative h-64 sm:h-72 w-full">
+                        <canvas id="chartStore"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Charts Row 2: Ventas por Ambiente & Ventas por Tipo de Producto -->
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Chart: Ventas por Ambiente (Donut con Porcentajes) -->
+                <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                        <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center">
+                            <i class="fa-solid fa-layer-group text-emerald-500 mr-2"></i>Ventas por Ambiente
+                        </h3>
+                        <span class="text-xs text-slate-400 font-medium">Distribución %</span>
+                    </div>
+                    <div class="relative h-64 sm:h-72 w-full flex items-center justify-center">
+                        <canvas id="chartEnvironment"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart: Ventas por Tipo de Producto (Torta con Porcentajes) -->
+                <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                        <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center">
+                            <i class="fa-solid fa-chart-pie text-amber-500 mr-2"></i>Ventas por Tipo de Producto
+                        </h3>
+                        <span class="text-xs text-slate-400 font-medium">Distribución por Categoría %</span>
+                    </div>
+                    <div class="relative h-64 sm:h-72 w-full flex items-center justify-center">
+                        <canvas id="chartProductType"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Detailed Data Table -->
+            <section class="bg-white rounded-2xl custom-shadow border border-slate-100 overflow-hidden">
+                <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center">
+                            <i class="fa-solid fa-table-list text-indigo-500 mr-2"></i>Detalle de Registros (2026)
+                        </h3>
+                        <p class="text-xs text-slate-400 mt-0.5">Mostrando transacciones que coinciden con los filtros</p>
+                    </div>
+                    <span id="recordCountBadge" class="self-start sm:self-auto px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-full border border-slate-200">
+                        0 Registros
+                    </span>
+                </div>
+                <div class="overflow-x-auto max-h-96">
+                    <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                        <thead class="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider">
+                            <tr>
+                                <th class="p-3 sm:p-4">Fecha</th>
+                                <th class="p-3 sm:p-4">Tienda</th>
+                                <th class="p-3 sm:p-4">Ambiente</th>
+                                <th class="p-3 sm:p-4">Tipo de Producto</th>
+                                <th class="p-3 sm:p-4">Producto</th>
+                                <th class="p-3 sm:p-4 text-right">Cantidad</th>
+                                <th class="p-3 sm:p-4 text-right">Precio Unitario</th>
+                                <th class="p-3 sm:p-4 text-right">Venta + Impuestos</th>
+                            </tr>
+                        </thead>
+                        <tbody id="salesTableBody" class="divide-y divide-slate-100 text-slate-700">
+                            <!-- Dynamic rows rendered here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <!-- VIEW 2: COMPARATIVO VS AÑO ANTERIOR (YoY) -->
+        <div id="viewYoY" class="hidden space-y-6 animate-fade-in">
+
+            <!-- YoY Metrics Cards -->
+            <section class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
+                <!-- Tarjeta 1: Ventas YoY -->
+                <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Ventas 2026 (Período)</p>
+                            <div class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl">
+                                <i class="fa-solid fa-sack-dollar text-lg"></i>
+                            </div>
+                        </div>
+                        <h3 id="yoy2026Total" class="text-2xl font-bold text-slate-900 mt-1">$0</h3>
+                        <p class="text-xs text-slate-500 font-medium mt-1">
+                            2025: <span id="yoy2025Total" class="font-semibold text-slate-700">$0</span>
+                        </p>
+                    </div>
+
+                    <div class="flex items-center justify-between border-t border-slate-100 pt-3 mt-3">
+                        <div>
+                            <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Dif. Absoluta</p>
+                            <h4 id="yoyDiffAmount" class="text-sm font-bold text-slate-900">$0</h4>
+                        </div>
+                        <div id="yoySalesBadge" class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                            <i class="fa-solid fa-minus mr-1"></i>0.0%
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 2: Cantidad de Productos YoY (Sumatoria de la columna "cantidad") -->
+                <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Cantidad de Productos</p>
+                            <div class="p-2.5 bg-amber-50 text-amber-600 rounded-xl">
+                                <i class="fa-solid fa-boxes-stacked text-lg"></i>
+                            </div>
+                        </div>
+                        <h3 id="yoyQty2026" class="text-2xl font-bold text-slate-900 mt-1">0</h3>
+                        <p class="text-xs text-slate-500 font-medium mt-1">
+                            2025: <span id="yoyQty2025" class="font-semibold text-slate-700">0</span>
+                        </p>
+                    </div>
+
+                    <div class="flex items-center justify-between border-t border-slate-100 pt-3 mt-3">
+                        <div>
+                            <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Dif. Cantidad</p>
+                            <h4 id="yoyQtyDiff" class="text-sm font-bold text-slate-900">0</h4>
+                        </div>
+                        <div id="yoyQtyBadge" class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                            <i class="fa-solid fa-minus mr-1"></i>0.0%
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 3: Producto Estrella YoY -->
+                <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Producto Estrella</p>
+                            <div class="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl">
+                                <i class="fa-solid fa-trophy text-lg"></i>
+                            </div>
+                        </div>
+                        <h3 id="yoyTopProductName" class="text-lg font-bold text-slate-900 mt-1 truncate max-w-[220px]" title="Producto Estrella">-</h3>
+                        <p id="yoyTopProduct2026" class="text-xs text-slate-500 font-medium mt-1">
+                            2026: <span class="font-semibold text-slate-700">$0 (0 unid.)</span>
+                        </p>
+                    </div>
+
+                    <div class="flex items-center justify-between border-t border-slate-100 pt-3 mt-3">
+                        <div>
+                            <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Ventas 2025</p>
+                            <h4 id="yoyTopProduct2025" class="text-sm font-bold text-slate-900">$0</h4>
+                        </div>
+                        <div id="yoyTopProductBadge" class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                            <i class="fa-solid fa-minus mr-1"></i>0.0%
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- YoY Charts Section -->
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Chart: Comparativo Mensual (2026 vs 2025) -->
+                <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                        <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center">
+                            <i class="fa-solid fa-chart-column text-indigo-500 mr-2"></i>Comparativo de Ventas por Mes
+                        </h3>
+                        <div class="flex items-center space-x-3 text-xs font-semibold">
+                            <span class="flex items-center"><span class="w-3 h-3 bg-indigo-600 rounded-sm inline-block mr-1"></span>2026</span>
+                            <span class="flex items-center"><span class="w-3 h-3 bg-slate-300 rounded-sm inline-block mr-1"></span>2025</span>
+                        </div>
+                    </div>
+                    <div class="relative h-64 sm:h-72 w-full">
+                        <canvas id="chartYoYMonthly"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart: Comparativo por Tienda (2026 vs 2025) -->
+                <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                        <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center">
+                            <i class="fa-solid fa-store text-blue-500 mr-2"></i>Comparativo por Tienda
+                        </h3>
+                        <div class="flex items-center space-x-3 text-xs font-semibold">
+                            <span class="flex items-center"><span class="w-3 h-3 bg-indigo-600 rounded-sm inline-block mr-1"></span>2026</span>
+                            <span class="flex items-center"><span class="w-3 h-3 bg-slate-300 rounded-sm inline-block mr-1"></span>2025</span>
+                        </div>
+                    </div>
+                    <div class="relative h-64 sm:h-72 w-full">
+                        <canvas id="chartYoYStore"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Table: Product Breakdown 2026 vs 2025 -->
+            <section class="bg-white rounded-2xl custom-shadow border border-slate-100 overflow-hidden">
+                <div class="p-5 border-b border-slate-100">
+                    <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center">
+                        <i class="fa-solid fa-boxes-stacked text-indigo-500 mr-2"></i>Comparativo de Ventas por Producto
+                    </h3>
+                    <p class="text-xs text-slate-400 mt-0.5">Rendimiento y variación de ventas por producto en el período equivalente</p>
+                </div>
+                <div class="overflow-x-auto max-h-96">
+                    <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                        <thead class="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider">
+                            <tr>
+                                <th class="p-3 sm:p-4">Producto</th>
+                                <th class="p-3 sm:p-4">Tipo de Producto</th>
+                                <th class="p-3 sm:p-4 text-right">Ventas 2026</th>
+                                <th class="p-3 sm:p-4 text-right">Ventas 2025</th>
+                                <th class="p-3 sm:p-4 text-right">Diferencia ($)</th>
+                                <th class="p-3 sm:p-4 text-right">Variación (%)</th>
+                                <th class="p-3 sm:p-4 text-right">Unidades (26 vs 25)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="yoyTableBody" class="divide-y divide-slate-100 text-slate-700">
+                            <!-- Dynamic YoY breakdown rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- Configuration Modal -->
+    <div id="configModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 space-y-5 animate-fade-in">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-sliders text-indigo-600"></i>
+                    <h3 class="font-bold text-slate-800 text-base">Configuración de Origen y Columnas</h3>
+                </div>
+                <button onclick="closeConfigModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4 text-xs sm:text-sm">
+                <!-- Main CSV URL Input -->
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">URL CSV de Google Sheets (Principal 2026)</label>
+                    <input type="text" id="inputUrlMain" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="https://docs.google.com/spreadsheets/.../pub?output=csv">
+                </div>
+
+                <!-- 2025 CSV URL Input (Hidden) -->
+                <input type="hidden" id="inputUrl2025">
+
+                <hr class="border-slate-100">
+
+                <p class="font-bold text-slate-800 text-xs uppercase tracking-wider">Asignación Manual de Columnas</p>
+
+                <!-- Mapping Selects Grid -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-slate-500 text-xs mb-1">Columna Ventas + Impuestos</label>
+                        <select id="mapSales" class="w-full bg-slate-50 border border-slate-200 text-xs rounded-xl p-2 focus:ring-2 focus:ring-indigo-500"></select>
+                    </div>
+                    <div>
+                        <label class="block text-slate-500 text-xs mb-1">Columna Fecha / Mes</label>
+                        <select id="mapDate" class="w-full bg-slate-50 border border-slate-200 text-xs rounded-xl p-2 focus:ring-2 focus:ring-indigo-500"></select>
+                    </div>
+                    <div>
+                        <label class="block text-slate-500 text-xs mb-1">Columna Tienda</label>
+                        <select id="mapStore" class="w-full bg-slate-50 border border-slate-200 text-xs rounded-xl p-2 focus:ring-2 focus:ring-indigo-500"></select>
+                    </div>
+                    <div>
+                        <label class="block text-slate-500 text-xs mb-1">Columna Ambiente</label>
+                        <select id="mapEnv" class="w-full bg-slate-50 border border-slate-200 text-xs rounded-xl p-2 focus:ring-2 focus:ring-indigo-500"></select>
+                    </div>
+                    <div>
+                        <label class="block text-slate-500 text-xs mb-1">Columna Tipo Producto</label>
+                        <select id="mapProductType" class="w-full bg-slate-50 border border-slate-200 text-xs rounded-xl p-2 focus:ring-2 focus:ring-indigo-500"></select>
+                    </div>
+                    <div>
+                        <label class="block text-slate-500 text-xs mb-1">Columna Producto (Específico)</label>
+                        <select id="mapProduct" class="w-full bg-slate-50 border border-slate-200 text-xs rounded-xl p-2 focus:ring-2 focus:ring-indigo-500"></select>
+                    </div>
+                    <div>
+                        <label class="block text-slate-500 text-xs mb-1">Columna Cantidad</label>
+                        <select id="mapQty" class="w-full bg-slate-50 border border-slate-200 text-xs rounded-xl p-2 focus:ring-2 focus:ring-indigo-500"></select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-2 pt-3 border-t border-slate-100">
+                <button onclick="closeConfigModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition">Cancelar</button>
+                <button onclick="saveConfigAndRefresh()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-xs transition">Guardar y Recargar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const DEFAULT_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSZFh_yY8WrgN-DEVN5WDthYQAd9mMrrG_I6_mnvPNAaqUGe5RGM9WzqqsVxyPXk1-pbwGwJ74YsaAt/pub?output=csv';
+        const DEFAULT_2025_CSV_URL = 'https://docs.google.com/spreadsheets/d/1WFb1YC6-GaVnnRZtTaFXFGdXVevllCqDa624Le1bum0/gviz/tq?tqx=out:csv';
+
+        // State variables
+        let rawData2026 = [];
+        let rawData2025 = [];
+        let filteredData2026 = [];
+        let currentTab = 'main';
+        let columnsList = [];
+
+        // Dark Mode Toggle Logic
+        function toggleDarkMode() {
+            const body = document.body;
+            const icon = document.getElementById('darkModeIcon');
+            body.classList.toggle('dark-mode');
+            
+            const isDark = body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+
+            if (icon) {
+                if (isDark) {
+                    icon.className = 'fa-solid fa-sun text-amber-400';
+                } else {
+                    icon.className = 'fa-solid fa-moon text-slate-600';
+                }
+            }
+
+            // Re-render charts with updated theme colors
+            renderCharts();
+            if (currentTab === 'yoy') updateYoYView();
+        }
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const icon = document.getElementById('darkModeIcon');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                if (icon) icon.className = 'fa-solid fa-sun text-amber-400';
+            }
+        }
+
+        // Chart Instance Handles
+        let chartMonthlyInst = null;
+        let chartStoreInst = null;
+        let chartEnvInst = null;
+        let chartProductTypeInst = null;
+        let chartYoYMonthlyInst = null;
+        let chartYoYStoreInst = null;
+
+        // Color Palette for charts
+        const COLOR_PALETTE = ['#4f46e5', '#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6', '#06b6d4', '#84cc16', '#64748b', '#d97706'];
+
+        // Currency Formatter Helper
+        function formatCurrency(val, decimals = 2) {
+            const num = parseNum(val);
+            return '$' + num.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+        }
+
+        function formatCurrencyNoDecimals(val) {
+            return formatCurrency(val, 0);
+        }
+
+        // Dynamic Column Mapping Storage
+        let columnMapping = {
+            sales: null,
+            date: null,
+            store: null,
+            env: null,
+            productType: null,
+            product: null,
+            qty: null
+        };
+        function autoDetectColumns(headers) {
+            headers.forEach(h => {
+                const clean = h.toLowerCase().trim();
+                
+                // Prioritize "ventas + impuestos"
+                if (!columnMapping.sales) {
+                    if (clean.includes('impuesto') || clean.includes('ventas + impuestos') || clean.includes('ventas+impuestos')) {
+                        columnMapping.sales = h;
+                    }
+                }
+                if (!columnMapping.date && (clean.includes('fecha') || clean.includes('mes') || clean.includes('date'))) {
+                    columnMapping.date = h;
+                }
+                if (!columnMapping.store && (clean.includes('tienda') || clean.includes('sucursal') || clean.includes('store'))) {
+                    columnMapping.store = h;
+                }
+                if (!columnMapping.env && (clean.includes('ambiente') || clean.includes('zona') || clean.includes('espacio'))) {
+                    columnMapping.env = h;
+                }
+                if (!columnMapping.productType && (clean.includes('tipo de producto') || clean.includes('tipo producto') || clean.includes('categoria') || clean.includes('familia'))) {
+                    columnMapping.productType = h;
+                }
+                if (!columnMapping.product && (clean === 'producto' || clean.includes('articulo') || clean.includes('item'))) {
+                    columnMapping.product = h;
+                }
+                if (!columnMapping.qty && (clean.includes('cantidad') || clean.includes('cant') || clean.includes('unidades') || clean === 'qty')) {
+                    columnMapping.qty = h;
+                }
+            });
+
+            // Fallbacks if not detected
+            if (!columnMapping.sales) columnMapping.sales = headers.find(h => h.toLowerCase().includes('venta') || h.toLowerCase().includes('total')) || headers[0];
+            if (!columnMapping.date) columnMapping.date = headers.find(h => h.toLowerCase().includes('fech')) || headers[1];
+            if (!columnMapping.store) columnMapping.store = headers.find(h => h.toLowerCase().includes('tiend')) || headers[2];
+            if (!columnMapping.env) columnMapping.env = headers.find(h => h.toLowerCase().includes('ambien')) || headers[3];
+            if (!columnMapping.productType) columnMapping.productType = headers.find(h => h.toLowerCase().includes('tipo')) || headers[4];
+            if (!columnMapping.product) columnMapping.product = headers.find(h => h.toLowerCase().includes('prod')) || headers[5];
+            if (!columnMapping.qty) columnMapping.qty = headers.find(h => h.toLowerCase().includes('cant') || h.toLowerCase().includes('unid')) || null;
+        }
+
+        function parseNum(val) {
+            if (!val) return 0;
+            if (typeof val === 'number') return isNaN(val) ? 0 : val;
+            let clean = String(val).replace(/[^0-9.,-]/g, '').trim();
+            if (clean.includes(',') && clean.includes('.')) {
+                if (clean.indexOf(',') < clean.indexOf('.')) {
+                    clean = clean.replace(/,/g, '');
+                } else {
+                    clean = clean.replace(/\./g, '').replace(',', '.');
+                }
+            } else if (clean.includes(',')) {
+                clean = clean.replace(',', '.');
+            }
+            let res = parseFloat(clean);
+            return isNaN(res) ? 0 : res;
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            // Register DataLabels Plugin for Pie/Donut charts
+            if (typeof ChartDataLabels !== 'undefined') {
+                Chart.register(ChartDataLabels);
+            }
+            loadDashboardData();
+            
+            // Auto refresh every 60 seconds
+            setInterval(() => {
+                loadDashboardData(true);
+            }, 60000);
+        });
+
+        function loadDashboardData(isBackground = false) {
+            const mainUrl = localStorage.getItem('csv_url_main') || DEFAULT_CSV_URL;
+            const refreshIcon = document.getElementById('refreshIcon');
+            if (refreshIcon) refreshIcon.classList.add('fa-spin');
+
+            const statusBanner = document.getElementById('statusBanner');
+            const statusText = document.getElementById('statusText');
+            if (statusBanner && !isBackground) {
+                statusBanner.classList.remove('hidden');
+                statusText.innerText = 'Obteniendo datos de Google Sheets...';
+            }
+
+            Papa.parse(mainUrl, {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    if (refreshIcon) refreshIcon.classList.remove('fa-spin');
+                    if (!results.data || results.data.length === 0) {
+                        if (statusText) statusText.innerText = 'No se encontraron datos en el archivo CSV.';
+                        return;
+                    }
+
+                    // Extract columns
+                    columnsList = Object.keys(results.data[0] || {});
+                    autoDetectColumns(columnsList);
+
+                    // Separate or assign 2026 data
+                    rawData2026 = results.data.filter(row => {
+                        let d = parseDateDetails(getRowValue(row, columnMapping.date));
+                        // If no year specified, default to 2026 for main sheet
+                        return d.year === null || d.year === 2026;
+                    });
+
+                    // Update UI Filter options
+                    populateFilterDropdowns();
+                    applyFilters();
+
+                    // Update timestamp
+                    const now = new Date();
+                    const lastUpdatedText = document.getElementById('lastUpdatedText');
+                    if (lastUpdatedText) {
+                        lastUpdatedText.innerText = 'Última actualización: ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    }
+                    if (statusText) statusText.innerText = 'Datos sincronizados correctamente (' + rawData2026.length + ' registros en 2026)';
+
+                    // Load 2025 Data for YoY
+                    load2025Data();
+                },
+                error: function(err) {
+                    if (refreshIcon) refreshIcon.classList.remove('fa-spin');
+                    console.error("Error parsing CSV:", err);
+                    if (statusText) statusText.innerText = 'Error al cargar los datos CSV. Revisa la URL en configuración.';
+                }
+            });
+        }
+
+        function load2025Data() {
+            const custom2025Url = localStorage.getItem('csv_url_2025');
+            const mainUrl = localStorage.getItem('csv_url_main') || DEFAULT_CSV_URL;
+
+            let candidateUrls = [];
+            if (custom2025Url && custom2025Url.trim() !== '') {
+                candidateUrls.push(custom2025Url.trim());
+            }
+            // Direct CSV endpoints derived from provided 2025 Google Sheet
+            candidateUrls.push(DEFAULT_2025_CSV_URL);
+            candidateUrls.push('https://docs.google.com/spreadsheets/d/1WFb1YC6-GaVnnRZtTaFXFGdXVevllCqDa624Le1bum0/gviz/tq?tqx=out:csv&sheet=2025');
+            candidateUrls.push('https://docs.google.com/spreadsheets/d/1WFb1YC6-GaVnnRZtTaFXFGdXVevllCqDa624Le1bum0/export?format=csv');
+            candidateUrls.push('https://docs.google.com/spreadsheets/d/1WFb1YC6-GaVnnRZtTaFXFGdXVevllCqDa624Le1bum0/export?format=csv&sheet=2025');
+
+            if (mainUrl.includes('sheet=')) {
+                candidateUrls.push(mainUrl.replace(/sheet=[^&]+/, 'sheet=2025'));
+            } else {
+                candidateUrls.push(mainUrl + '&sheet=2025');
+            }
+            if (mainUrl.includes('gid=')) {
+                candidateUrls.push(mainUrl.replace(/gid=[^&]+/, 'gid=1'));
+            } else {
+                candidateUrls.push(mainUrl + '&gid=1');
+            }
+            candidateUrls.push(mainUrl); // Fallback to same file
+
+            function tryNextUrl(idx) {
+                if (idx >= candidateUrls.length) {
+                    if (currentTab === 'yoy') updateYoYView();
+                    return;
+                }
+
+                Papa.parse(candidateUrls[idx], {
+                    download: true,
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: function(res) {
+                        if (res.data && res.data.length > 0) {
+                            // Validate it's not an HTML response
+                            const firstRow = res.data[0];
+                            if (Object.keys(firstRow).length > 1) {
+                                // Filter for 2025 rows or take all if dedicated sheet
+                                let filtered = res.data.filter(row => {
+                                    let d = parseDateDetails(getRowValue(row, columnMapping.date));
+                                    return d.year === 2025 || d.year === null;
+                                });
+                                if (filtered.length > 0) {
+                                    rawData2025 = filtered;
+                                    if (currentTab === 'yoy') updateYoYView();
+                                    return;
+                                }
+                            }
+                        }
+                        tryNextUrl(idx + 1);
+                    },
+                    error: function() {
+                        tryNextUrl(idx + 1);
+                    }
+                });
+            }
+
+            tryNextUrl(0);
+        }
+
+        function getRowValue(row, colName) {
+            if (!row || !colName) return '';
+            if (row[colName] !== undefined) return row[row[colName] !== undefined ? colName : ''];
+            
+            // Loose matching for whitespace or casing differences
+            const cleanTarget = colName.toLowerCase().replace(/\s+/g, '');
+            for (let key in row) {
+                if (key.toLowerCase().replace(/\s+/g, '') === cleanTarget) {
+                    return row[key];
+                }
+            }
+            return '';
+        }
+
+        function parseDateDetails(dateStr) {
+            if (!dateStr) return { year: null, monthIndex: null, monthName: null };
+            const str = String(dateStr).trim();
+            const lowerStr = str.toLowerCase();
+
+            const monthNames = [
+                'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+                'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+            ];
+            const monthAbbrs = [
+                'ene', 'feb', 'mar', 'abr', 'may', 'jun',
+                'jul', 'ago', 'sep', 'oct', 'nov', 'dic'
+            ];
+
+            // Match month names
+            for (let i = 0; i < 12; i++) {
+                if (lowerStr.includes(monthNames[i]) || lowerStr.startsWith(monthAbbrs[i])) {
+                    const yearMatch = str.match(/20\d\d/);
+                    const year = yearMatch ? parseInt(yearMatch[0], 10) : null;
+                    return { year: year, monthIndex: i, monthName: monthNames[i].charAt(0).toUpperCase() + monthNames[i].slice(1) };
+                }
+            }
+
+            // Numerical date format: DD/MM/YYYY or YYYY-MM-DD
+            let day, month, year;
+            if (str.includes('-')) {
+                const parts = str.split('-');
+                if (parts[0].length === 4) { // YYYY-MM-DD
+                    year = parseInt(parts[0], 10);
+                    month = parseInt(parts[1], 10) - 1;
+                } else { // DD-MM-YYYY
+                    month = parseInt(parts[1], 10) - 1;
+                    year = parseInt(parts[2], 10);
+                }
+            } else if (str.includes('/')) {
+                const parts = str.split('/');
+                if (parts[2] && parts[2].length >= 2) {
+                    month = parseInt(parts[1], 10) - 1;
+                    year = parseInt(parts[2], 10);
+                    if (year < 100) year += 2000;
+                }
+            }
+
+            if (month >= 0 && month < 12) {
+                const spanishMonths = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+                return { year: year || null, monthIndex: month, monthName: spanishMonths[month] };
+            }
+
+            // Standard JS Date
+            const d = new Date(str);
+            if (!isNaN(d.getTime())) {
+                const spanishMonths = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+                return { year: d.getFullYear(), monthIndex: d.getMonth(), monthName: spanishMonths[d.getMonth()] };
+            }
+
+            return { year: null, monthIndex: null, monthName: null };
+        }
+
+        function populateFilterDropdowns() {
+            const getUniqueValues = (colKey) => {
+                const set = new Set();
+                rawData2026.forEach(r => {
+                    const val = getRowValue(r, colKey);
+                    if (val && String(val).trim() !== '') set.add(String(val).trim());
+                });
+                return Array.from(set).sort();
+            };
+
+            const fillSelect = (elemId, items, defaultText) => {
+                const select = document.getElementById(elemId);
+                if (!select) return;
+                const currentVal = select.value;
+                select.innerHTML = `<option value="ALL">${defaultText}</option>`;
+                items.forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item;
+                    opt.innerText = item;
+                    select.appendChild(opt);
+                });
+                select.value = currentVal || 'ALL';
+            };
+
+            fillSelect('filterTienda', getUniqueValues(columnMapping.store), 'Todas las Tiendas');
+            fillSelect('filterAmbiente', getUniqueValues(columnMapping.env), 'Todos los Ambientes');
+            fillSelect('filterTipoProducto', getUniqueValues(columnMapping.productType), 'Todos los Tipos');
+        }
+
+        function applyFilters() {
+            const selectedTienda = document.getElementById('filterTienda')?.value || 'ALL';
+            const selectedAmbiente = document.getElementById('filterAmbiente')?.value || 'ALL';
+            const selectedTipoProducto = document.getElementById('filterTipoProducto')?.value || 'ALL';
+            const selectedMes = document.getElementById('filterMes')?.value || 'ALL';
+            const searchText = (document.getElementById('filterSearch')?.value || '').toLowerCase().trim();
+
+            filteredData2026 = rawData2026.filter(row => {
+                // Tienda Filter
+                if (selectedTienda !== 'ALL' && getRowValue(row, columnMapping.store) !== selectedTienda) {
+                    return false;
+                }
+                // Ambiente Filter
+                if (selectedAmbiente !== 'ALL' && getRowValue(row, columnMapping.env) !== selectedAmbiente) {
+                    return false;
+                }
+                // Tipo Producto Filter
+                if (selectedTipoProducto !== 'ALL' && getRowValue(row, columnMapping.productType) !== selectedTipoProducto) {
+                    return false;
+                }
+                // Mes Filter
+                if (selectedMes !== 'ALL') {
+                    let d = parseDateDetails(getRowValue(row, columnMapping.date));
+                    if (d.monthIndex === null || String(d.monthIndex) !== selectedMes) {
+                        return false;
+                    }
+                }
+                // Search Text Filter
+                if (searchText !== '') {
+                    const rowContent = Object.values(row).join(' ').toLowerCase();
+                    if (!rowContent.includes(searchText)) return false;
+                }
+                return true;
+            });
+
+            renderKPIs();
+            renderCharts();
+            renderTable();
+
+            if (currentTab === 'yoy') {
+                updateYoYView();
+            }
+        }
+
+        function resetFilters() {
+            if (document.getElementById('filterTienda')) document.getElementById('filterTienda').value = 'ALL';
+            if (document.getElementById('filterAmbiente')) document.getElementById('filterAmbiente').value = 'ALL';
+            if (document.getElementById('filterTipoProducto')) document.getElementById('filterTipoProducto').value = 'ALL';
+            if (document.getElementById('filterMes')) document.getElementById('filterMes').value = 'ALL';
+            if (document.getElementById('filterSearch')) document.getElementById('filterSearch').value = '';
+            applyFilters();
+        }
+
+        function renderKPIs() {
+            let totalSales = 0;
+            let totalTx = filteredData2026.length;
+            let totalQty = 0;
+            const storeTotals = {};
+            const productTotals = {};
+
+            filteredData2026.forEach(row => {
+                const salesVal = parseNum(getRowValue(row, columnMapping.sales));
+                totalSales += salesVal;
+
+                // Sum directly from "cantidad" column
+                const qVal = parseNum(getRowValue(row, columnMapping.qty));
+                totalQty += qVal;
+
+                // Store aggregation
+                const store = getRowValue(row, columnMapping.store) || 'Sin Especificar';
+                storeTotals[store] = (storeTotals[store] || 0) + salesVal;
+
+                // Product aggregation
+                const prod = getRowValue(row, columnMapping.product) || getRowValue(row, columnMapping.productType) || 'Sin Nombre';
+                if (!productTotals[prod]) {
+                    productTotals[prod] = { amount: 0, count: 0 };
+                }
+                productTotals[prod].amount += salesVal;
+                productTotals[prod].count += 1;
+            });
+
+            // Top Store
+            let topStore = '-';
+            let topStoreAmt = 0;
+            for (let s in storeTotals) {
+                if (storeTotals[s] > topStoreAmt) {
+                    topStoreAmt = storeTotals[s];
+                    topStore = s;
+                }
+            }
+
+            // Top Product
+            let topProd = '-';
+            let topProdAmt = 0;
+            let topProdCount = 0;
+            for (let p in productTotals) {
+                if (productTotals[p].amount > topProdAmt) {
+                    topProdAmt = productTotals[p].amount;
+                    topProdCount = productTotals[p].count;
+                    topProd = p;
+                }
+            }
+
+            // Render KPI elements safely
+            if (document.getElementById('kpiTotalSales')) document.getElementById('kpiTotalSales').innerText = formatCurrencyNoDecimals(totalSales);
+            if (document.getElementById('kpiTotalQty')) document.getElementById('kpiTotalQty').innerText = Math.round(totalQty).toLocaleString('en-US');
+            if (document.getElementById('kpiAvgQty')) document.getElementById('kpiAvgQty').innerText = 'Prom. por Venta: ' + (totalTx > 0 ? (totalQty / totalTx).toFixed(1) : 0) + ' unid.';
+            
+            if (document.getElementById('kpiTopStore')) document.getElementById('kpiTopStore').innerText = topStore;
+            if (document.getElementById('kpiTopStoreAmount')) document.getElementById('kpiTopStoreAmount').innerText = formatCurrencyNoDecimals(topStoreAmt) + ' en ventas';
+            
+            const kpiTopProdElem = document.getElementById('kpiTopProduct');
+            if (kpiTopProdElem) {
+                kpiTopProdElem.innerText = topProd;
+                kpiTopProdElem.title = topProd;
+            }
+            if (document.getElementById('kpiTopProductAmount')) {
+                document.getElementById('kpiTopProductAmount').innerText = `${topProdCount} unid. (${formatCurrencyNoDecimals(topProdAmt)})`;
+            }
+        }
+
+        function renderCharts() {
+            const isDark = document.body.classList.contains('dark-mode');
+            const textColor = isDark ? '#f8fafc' : '#475569';
+            const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)';
+
+            // 1. Ventas por Mes (2026)
+            const monthlySums = new Array(12).fill(0);
+            const monthHasData = new Array(12).fill(false);
+
+            filteredData2026.forEach(row => {
+                let d = parseDateDetails(getRowValue(row, columnMapping.date));
+                if (d.monthIndex !== null && d.monthIndex >= 0 && d.monthIndex < 12) {
+                    monthlySums[d.monthIndex] += parseNum(getRowValue(row, columnMapping.sales));
+                    monthHasData[d.monthIndex] = true;
+                }
+            });
+
+            const allMonthLabels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            
+            // Filter to include only months with actual data
+            const activeMonthLabels = [];
+            const activeMonthlySums = [];
+
+            for (let i = 0; i < 12; i++) {
+                if (monthHasData[i]) {
+                    activeMonthLabels.push(allMonthLabels[i]);
+                    activeMonthlySums.push(monthlySums[i]);
+                }
+            }
+
+            const displayLabels = activeMonthLabels.length > 0 ? activeMonthLabels : allMonthLabels;
+            const displayData = activeMonthLabels.length > 0 ? activeMonthlySums : monthlySums;
+
+            if (chartMonthlyInst) chartMonthlyInst.destroy();
+            const ctxMonthly = document.getElementById('chartMonthly')?.getContext('2d');
+            if (ctxMonthly) {
+                chartMonthlyInst = new Chart(ctxMonthly, {
+                    type: 'line',
+                    data: {
+                        labels: displayLabels,
+                        datasets: [{
+                            label: 'Ventas ($)',
+                            data: displayData,
+                            borderColor: '#4f46e5',
+                            backgroundColor: 'rgba(79, 70, 229, 0.08)',
+                            fill: true,
+                            tension: 0.35,
+                            borderWidth: 3,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#4f46e5'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            datalabels: { display: false }
+                        },
+                        scales: {
+                            x: {
+                                ticks: { color: textColor },
+                                grid: { color: gridColor }
+                            },
+                            y: {
+                                ticks: { color: textColor, callback: v => '$' + (v >= 1000 ? (v/1000).toFixed(0) + 'k' : v) },
+                                grid: { color: gridColor }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 2. Ventas por Tienda
+            const storeMap = {};
+            filteredData2026.forEach(row => {
+                const s = getRowValue(row, columnMapping.store) || 'Sin Especificar';
+                storeMap[s] = (storeMap[s] || 0) + parseNum(getRowValue(row, columnMapping.sales));
+            });
+
+            if (chartStoreInst) chartStoreInst.destroy();
+            const ctxStore = document.getElementById('chartStore')?.getContext('2d');
+            if (ctxStore) {
+                chartStoreInst = new Chart(ctxStore, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(storeMap),
+                        datasets: [{
+                            label: 'Ventas por Tienda',
+                            data: Object.values(storeMap),
+                            backgroundColor: '#3b82f6',
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            datalabels: { display: false }
+                        },
+                        scales: {
+                            x: {
+                                ticks: { color: textColor },
+                                grid: { color: gridColor }
+                            },
+                            y: { 
+                                ticks: { color: textColor, callback: v => '$' + (v >= 1000 ? (v/1000).toFixed(0) + 'k' : v) },
+                                grid: { color: gridColor }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 3. Ventas por Ambiente (Donut con Porcentajes)
+            const envMap = {};
+            let totalEnvSales = 0;
+            filteredData2026.forEach(row => {
+                const e = getRowValue(row, columnMapping.env) || 'Otro';
+                const amt = parseNum(getRowValue(row, columnMapping.sales));
+                envMap[e] = (envMap[e] || 0) + amt;
+                totalEnvSales += amt;
+            });
+
+            const envLabels = Object.keys(envMap).map(e => {
+                const pct = totalEnvSales > 0 ? ((envMap[e] / totalEnvSales) * 100).toFixed(1) : 0;
+                return `${e} (${pct}%)`;
+            });
+
+            if (chartEnvInst) chartEnvInst.destroy();
+            const ctxEnv = document.getElementById('chartEnvironment')?.getContext('2d');
+            if (ctxEnv) {
+                chartEnvInst = new Chart(ctxEnv, {
+                    type: 'doughnut',
+                    data: {
+                        labels: envLabels,
+                        datasets: [{
+                            data: Object.values(envMap),
+                            backgroundColor: COLOR_PALETTE,
+                            borderWidth: 2,
+                            borderColor: isDark ? '#1e293b' : '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { 
+                                position: 'right', 
+                                labels: { boxWidth: 12, font: { size: 11 }, color: textColor } 
+                            },
+                            datalabels: {
+                                color: '#ffffff',
+                                font: { weight: 'bold', size: 11 },
+                                formatter: (value) => {
+                                    if (!totalEnvSales || value === 0) return '';
+                                    const pct = ((value / totalEnvSales) * 100).toFixed(1);
+                                    return pct >= 4 ? pct + '%' : '';
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const val = context.raw || 0;
+                                        const pct = totalEnvSales > 0 ? ((val / totalEnvSales) * 100).toFixed(1) : 0;
+                                        return ` ${formatCurrency(val)} (${pct}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 4. Ventas por Tipo de Producto (Gráfico de Torta con Porcentajes)
+            const prodTypeMap = {};
+            let totalProdTypeSales = 0;
+            filteredData2026.forEach(row => {
+                const pt = getRowValue(row, columnMapping.productType) || 'Otros';
+                const amt = parseNum(getRowValue(row, columnMapping.sales));
+                prodTypeMap[pt] = (prodTypeMap[pt] || 0) + amt;
+                totalProdTypeSales += amt;
+            });
+
+            const prodTypeLabels = Object.keys(prodTypeMap).map(pt => {
+                const pct = totalProdTypeSales > 0 ? ((prodTypeMap[pt] / totalProdTypeSales) * 100).toFixed(1) : 0;
+                return `${pt} (${pct}%)`;
+            });
+
+            if (chartProductTypeInst) chartProductTypeInst.destroy();
+            const ctxPt = document.getElementById('chartProductType')?.getContext('2d');
+            if (ctxPt) {
+                chartProductTypeInst = new Chart(ctxPt, {
+                    type: 'pie',
+                    data: {
+                        labels: prodTypeLabels,
+                        datasets: [{
+                            data: Object.values(prodTypeMap),
+                            backgroundColor: COLOR_PALETTE.slice().reverse(),
+                            borderWidth: 2,
+                            borderColor: isDark ? '#1e293b' : '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { 
+                                position: 'right', 
+                                labels: { boxWidth: 12, font: { size: 11 }, color: textColor } 
+                            },
+                            datalabels: {
+                                color: '#ffffff',
+                                font: { weight: 'bold', size: 11 },
+                                formatter: (value) => {
+                                    if (!totalProdTypeSales || value === 0) return '';
+                                    const pct = ((value / totalProdTypeSales) * 100).toFixed(1);
+                                    return pct >= 4 ? pct + '%' : '';
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const val = context.raw || 0;
+                                        const pct = totalProdTypeSales > 0 ? ((val / totalProdTypeSales) * 100).toFixed(1) : 0;
+                                        return ` ${formatCurrency(val)} (${pct}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('salesTableBody');
+            const badge = document.getElementById('recordCountBadge');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+            if (badge) badge.innerText = `${filteredData2026.length} Registros`;
+
+            if (filteredData2026.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400">No hay registros para los filtros seleccionados</td></tr>`;
+                return;
+            }
+
+            // Display top 100 records for optimal performance
+            const displayList = filteredData2026.slice(0, 100);
+            displayList.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-50 transition';
+                
+                const fecha = getRowValue(row, columnMapping.date) || '-';
+                const tienda = getRowValue(row, columnMapping.store) || '-';
+                const ambiente = getRowValue(row, columnMapping.env) || '-';
+                const tipoProd = getRowValue(row, columnMapping.productType) || '-';
+                const prod = getRowValue(row, columnMapping.product) || '-';
+                const monto = parseNum(getRowValue(row, columnMapping.sales));
+                const cant = parseNum(getRowValue(row, columnMapping.qty));
+                const precioUnitario = cant > 0 ? (monto / cant) : 0;
+
+                tr.innerHTML = `
+                    <td class="p-3 sm:p-4 font-medium text-slate-900">${fecha}</td>
+                    <td class="p-3 sm:p-4"><span class="px-2 py-0.5 bg-slate-100 text-slate-700 rounded-md text-xs">${tienda}</span></td>
+                    <td class="p-3 sm:p-4">${ambiente}</td>
+                    <td class="p-3 sm:p-4">${tipoProd}</td>
+                    <td class="p-3 sm:p-4 font-medium">${prod}</td>
+                    <td class="p-3 sm:p-4 text-right font-medium">${Math.round(cant).toLocaleString('en-US')}</td>
+                    <td class="p-3 sm:p-4 text-right font-medium text-slate-600">${formatCurrency(precioUnitario)}</td>
+                    <td class="p-3 sm:p-4 text-right font-bold text-slate-900">${formatCurrency(monto)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateYoYView() {
+            const isDark = document.body.classList.contains('dark-mode');
+            const textColor = isDark ? '#f8fafc' : '#475569';
+            const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)';
+
+            // Read active filter constraints
+            const selectedTienda = document.getElementById('filterTienda')?.value || 'ALL';
+            const selectedAmbiente = document.getElementById('filterAmbiente')?.value || 'ALL';
+            const selectedTipoProducto = document.getElementById('filterTipoProducto')?.value || 'ALL';
+
+            // Filter 2026 dataset
+            const filtered2026 = rawData2026.filter(r => {
+                if (selectedTienda !== 'ALL' && getRowValue(r, columnMapping.store) !== selectedTienda) return false;
+                if (selectedAmbiente !== 'ALL' && getRowValue(r, columnMapping.env) !== selectedAmbiente) return false;
+                if (selectedTipoProducto !== 'ALL' && getRowValue(r, columnMapping.productType) !== selectedTipoProducto) return false;
+                return true;
+            });
+
+            // Filter 2025 dataset by active filter selections
+            const filtered2025 = rawData2025.filter(r => {
+                if (selectedTienda !== 'ALL' && getRowValue(r, columnMapping.store) !== selectedTienda) return false;
+                if (selectedAmbiente !== 'ALL' && getRowValue(r, columnMapping.env) !== selectedAmbiente) return false;
+                if (selectedTipoProducto !== 'ALL' && getRowValue(r, columnMapping.productType) !== selectedTipoProducto) return false;
+                return true;
+            });
+
+            // Find last active month in 2026 for aligned period comparison
+            let maxMonth2026 = 0;
+            const monthly2026 = new Array(12).fill(0);
+            const tx2026 = new Array(12).fill(0);
+            const qty2026 = new Array(12).fill(0);
+
+            filtered2026.forEach(r => {
+                let d = parseDateDetails(getRowValue(r, columnMapping.date));
+                if (d.monthIndex !== null && d.monthIndex >= 0 && d.monthIndex < 12) {
+                    monthly2026[d.monthIndex] += parseNum(getRowValue(r, columnMapping.sales));
+                    tx2026[d.monthIndex] += 1;
+                    
+                    // Sum directly from "cantidad" column
+                    const qVal = parseNum(getRowValue(r, columnMapping.qty));
+                    qty2026[d.monthIndex] += qVal;
+                    if (d.monthIndex > maxMonth2026) maxMonth2026 = d.monthIndex;
+                }
+            });
+
+            // Filter 2025 data strictly up to maxMonth2026
+            const monthly2025 = new Array(12).fill(0);
+            const tx2025 = new Array(12).fill(0);
+            const qty2025 = new Array(12).fill(0);
+
+            const filtered2025Aligned = filtered2025.filter(r => {
+                let d = parseDateDetails(getRowValue(r, columnMapping.date));
+                return d.monthIndex !== null && d.monthIndex >= 0 && d.monthIndex <= maxMonth2026;
+            });
+
+            filtered2025Aligned.forEach(r => {
+                let d = parseDateDetails(getRowValue(r, columnMapping.date));
+                if (d.monthIndex !== null && d.monthIndex >= 0 && d.monthIndex < 12) {
+                    monthly2025[d.monthIndex] += parseNum(getRowValue(r, columnMapping.sales));
+                    tx2025[d.monthIndex] += 1;
+                    
+                    // Sum directly from "cantidad" column
+                    const qVal = parseNum(getRowValue(r, columnMapping.qty));
+                    qty2025[d.monthIndex] += qVal;
+                }
+            });
+
+            // Sum totals up to maxMonth2026 for aligned period comparison
+            let sum2026 = 0;
+            let sum2025 = 0;
+            let count2026 = 0;
+            let count2025 = 0;
+            let totalQty2026 = 0;
+            let totalQty2025 = 0;
+
+            for (let i = 0; i <= maxMonth2026; i++) {
+                sum2026 += monthly2026[i];
+                sum2025 += monthly2025[i];
+                count2026 += tx2026[i];
+                count2025 += tx2025[i];
+                totalQty2026 += qty2026[i];
+                totalQty2025 += qty2025[i];
+            }
+
+            const diffAmt = sum2026 - sum2025;
+            const pctGrowth = sum2025 > 0 ? ((diffAmt / sum2025) * 100) : 0;
+
+            const qtyDiff = totalQty2026 - totalQty2025;
+            const qtyPct = totalQty2025 > 0 ? ((qtyDiff / totalQty2025) * 100) : 0;
+
+            // Update Card 1: Ventas YoY
+            if (document.getElementById('yoy2026Total')) document.getElementById('yoy2026Total').innerText = formatCurrencyNoDecimals(sum2026);
+            if (document.getElementById('yoy2025Total')) document.getElementById('yoy2025Total').innerText = formatCurrencyNoDecimals(sum2025);
+            if (document.getElementById('yoyDiffAmount')) document.getElementById('yoyDiffAmount').innerText = (diffAmt >= 0 ? '+' : '') + formatCurrencyNoDecimals(diffAmt);
+            
+            const badgeSales = document.getElementById('yoySalesBadge');
+            if (badgeSales) {
+                if (pctGrowth > 0) {
+                    badgeSales.className = 'inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200';
+                    badgeSales.innerHTML = `<i class="fa-solid fa-arrow-trend-up mr-1"></i>+${pctGrowth.toFixed(1)}%`;
+                } else if (pctGrowth < 0) {
+                    badgeSales.className = 'inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200';
+                    badgeSales.innerHTML = `<i class="fa-solid fa-arrow-trend-down mr-1"></i>${pctGrowth.toFixed(1)}%`;
+                } else {
+                    badgeSales.className = 'inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600';
+                    badgeSales.innerHTML = `<i class="fa-solid fa-minus mr-1"></i>0.0%`;
+                }
+            }
+
+            // Update Card 2: Cantidad YoY
+            if (document.getElementById('yoyQty2026')) document.getElementById('yoyQty2026').innerText = Math.round(totalQty2026).toLocaleString('en-US');
+            if (document.getElementById('yoyQty2025')) document.getElementById('yoyQty2025').innerText = Math.round(totalQty2025).toLocaleString('en-US');
+            if (document.getElementById('yoyQtyDiff')) document.getElementById('yoyQtyDiff').innerText = (qtyDiff >= 0 ? '+' : '') + Math.round(qtyDiff).toLocaleString('en-US');
+
+            const badgeQty = document.getElementById('yoyQtyBadge');
+            if (badgeQty) {
+                if (qtyPct > 0) {
+                    badgeQty.className = 'inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200';
+                    badgeQty.innerHTML = `<i class="fa-solid fa-arrow-trend-up mr-1"></i>+${qtyPct.toFixed(1)}%`;
+                } else if (qtyPct < 0) {
+                    badgeQty.className = 'inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200';
+                    badgeQty.innerHTML = `<i class="fa-solid fa-arrow-trend-down mr-1"></i>${qtyPct.toFixed(1)}%`;
+                } else {
+                    badgeQty.className = 'inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600';
+                    badgeQty.innerHTML = `<i class="fa-solid fa-minus mr-1"></i>0.0%`;
+                }
+            }
+
+            // Update Card 3: Producto Estrella YoY
+            const yoyProdMap2026 = {};
+            const yoyProdMap2025 = {};
+
+            filtered2026.forEach(r => {
+                const prod = getRowValue(r, columnMapping.product) || getRowValue(r, columnMapping.productType) || 'Sin Especificar';
+                const sVal = parseNum(getRowValue(r, columnMapping.sales));
+                const qVal = parseNum(getRowValue(r, columnMapping.qty));
+                if (!yoyProdMap2026[prod]) yoyProdMap2026[prod] = { sales: 0, qty: 0 };
+                yoyProdMap2026[prod].sales += sVal;
+                yoyProdMap2026[prod].qty += qVal;
+            });
+
+            filtered2025Aligned.forEach(r => {
+                const prod = getRowValue(r, columnMapping.product) || getRowValue(r, columnMapping.productType) || 'Sin Especificar';
+                const sVal = parseNum(getRowValue(r, columnMapping.sales));
+                const qVal = parseNum(getRowValue(r, columnMapping.qty));
+                if (!yoyProdMap2025[prod]) yoyProdMap2025[prod] = { sales: 0, qty: 0 };
+                yoyProdMap2025[prod].sales += sVal;
+                yoyProdMap2025[prod].qty += qVal;
+            });
+
+            let yoyTopProdName = '-';
+            let yoyTopProdSales2026 = 0;
+            let yoyTopProdQty2026 = 0;
+
+            for (let p in yoyProdMap2026) {
+                if (yoyProdMap2026[p].sales > yoyTopProdSales2026) {
+                    yoyTopProdSales2026 = yoyProdMap2026[p].sales;
+                    yoyTopProdQty2026 = yoyProdMap2026[p].qty;
+                    yoyTopProdName = p;
+                }
+            }
+
+            let yoyTopProdSales2025 = 0;
+            let yoyTopProdQty2025 = 0;
+            if (yoyTopProdName !== '-' && yoyProdMap2025[yoyTopProdName]) {
+                yoyTopProdSales2025 = yoyProdMap2025[yoyTopProdName].sales;
+                yoyTopProdQty2025 = yoyProdMap2025[yoyTopProdName].qty;
+            }
+
+            const yoyTopProdDiff = yoyTopProdSales2026 - yoyTopProdSales2025;
+            const yoyTopProdPct = yoyTopProdSales2025 > 0 ? ((yoyTopProdDiff / yoyTopProdSales2025) * 100) : 0;
+
+            if (document.getElementById('yoyTopProductName')) {
+                const elem = document.getElementById('yoyTopProductName');
+                elem.innerText = yoyTopProdName;
+                elem.title = yoyTopProdName;
+            }
+            if (document.getElementById('yoyTopProduct2026')) {
+                document.getElementById('yoyTopProduct2026').innerHTML = `2026: <span class="font-semibold text-slate-700">${formatCurrencyNoDecimals(yoyTopProdSales2026)} (${Math.round(yoyTopProdQty2026).toLocaleString('en-US')} unid.)</span>`;
+            }
+            if (document.getElementById('yoyTopProduct2025')) {
+                document.getElementById('yoyTopProduct2025').innerText = formatCurrencyNoDecimals(yoyTopProdSales2025);
+            }
+
+            const badgeTopProd = document.getElementById('yoyTopProductBadge');
+            if (badgeTopProd) {
+                if (yoyTopProdSales2025 === 0 && yoyTopProdSales2026 > 0) {
+                    badgeTopProd.className = 'inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200';
+                    badgeTopProd.innerHTML = `<i class="fa-solid fa-star mr-1"></i>Nuevo`;
+                } else if (yoyTopProdPct > 0) {
+                    badgeTopProd.className = 'inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200';
+                    badgeTopProd.innerHTML = `<i class="fa-solid fa-arrow-trend-up mr-1"></i>+${yoyTopProdPct.toFixed(1)}%`;
+                } else if (yoyTopProdPct < 0) {
+                    badgeTopProd.className = 'inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200';
+                    badgeTopProd.innerHTML = `<i class="fa-solid fa-arrow-trend-down mr-1"></i>${yoyTopProdPct.toFixed(1)}%`;
+                } else {
+                    badgeTopProd.className = 'inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600';
+                    badgeTopProd.innerHTML = `<i class="fa-solid fa-minus mr-1"></i>0.0%`;
+                }
+            }
+
+            // Render YoY Monthly Chart only for elapsed months (0 to maxMonth2026)
+            const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+            const displayMonthNames = monthNames.slice(0, maxMonth2026 + 1);
+            const displayMonthly2026 = monthly2026.slice(0, maxMonth2026 + 1);
+            const displayMonthly2025 = monthly2025.slice(0, maxMonth2026 + 1);
+
+            if (chartYoYMonthlyInst) chartYoYMonthlyInst.destroy();
+            const ctxYoYMonthly = document.getElementById('chartYoYMonthly')?.getContext('2d');
+            if (ctxYoYMonthly) {
+                chartYoYMonthlyInst = new Chart(ctxYoYMonthly, {
+                    type: 'bar',
+                    data: {
+                        labels: displayMonthNames,
+                        datasets: [
+                            {
+                                label: '2026',
+                                data: displayMonthly2026,
+                                backgroundColor: '#4f46e5',
+                                borderRadius: 6
+                            },
+                            {
+                                label: '2025',
+                                data: displayMonthly2025,
+                                backgroundColor: isDark ? '#64748b' : '#cbd5e1',
+                                borderRadius: 6
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: { top: 20 }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            datalabels: {
+                                display: true,
+                                anchor: 'end',
+                                align: 'top',
+                                color: textColor,
+                                font: { size: 10, weight: 'bold' },
+                                formatter: (v) => {
+                                    if (!v || v === 0) return '';
+                                    if (Math.abs(v) >= 1000) {
+                                        let num = (v / 1000).toFixed(1);
+                                        if (num.endsWith('.0')) num = num.slice(0, -2);
+                                        return '$' + num + 'k';
+                                    }
+                                    return '$' + Math.round(v);
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: { color: textColor },
+                                grid: { color: gridColor }
+                            },
+                            y: { 
+                                ticks: { color: textColor, callback: v => '$' + (v >= 1000 ? (v/1000).toFixed(0) + 'k' : v) },
+                                grid: { color: gridColor }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Render YoY Store Chart using strictly aligned 2025 data (up to maxMonth2026)
+            const storeMap2026 = {};
+            const storeMap2025 = {};
+            filtered2026.forEach(r => {
+                const s = getRowValue(r, columnMapping.store) || 'Sin Especificar';
+                storeMap2026[s] = (storeMap2026[s] || 0) + parseNum(getRowValue(r, columnMapping.sales));
+            });
+            filtered2025Aligned.forEach(r => {
+                const s = getRowValue(r, columnMapping.store) || 'Sin Especificar';
+                storeMap2025[s] = (storeMap2025[s] || 0) + parseNum(getRowValue(r, columnMapping.sales));
+            });
+
+            const allStores = Array.from(new Set([...Object.keys(storeMap2026), ...Object.keys(storeMap2025)])).sort();
+            const storeValues2026 = allStores.map(s => storeMap2026[s] || 0);
+            const storeValues2025 = allStores.map(s => storeMap2025[s] || 0);
+
+            if (chartYoYStoreInst) chartYoYStoreInst.destroy();
+            const ctxYoYStore = document.getElementById('chartYoYStore')?.getContext('2d');
+            if (ctxYoYStore) {
+                chartYoYStoreInst = new Chart(ctxYoYStore, {
+                    type: 'bar',
+                    data: {
+                        labels: allStores,
+                        datasets: [
+                            {
+                                label: '2026',
+                                data: storeValues2026,
+                                backgroundColor: '#4f46e5',
+                                borderRadius: 6
+                            },
+                            {
+                                label: '2025',
+                                data: storeValues2025,
+                                backgroundColor: isDark ? '#64748b' : '#cbd5e1',
+                                borderRadius: 6
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: { top: 20 }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            datalabels: {
+                                display: true,
+                                anchor: 'end',
+                                align: 'top',
+                                color: textColor,
+                                font: { size: 10, weight: 'bold' },
+                                formatter: (v) => {
+                                    if (!v || v === 0) return '';
+                                    if (Math.abs(v) >= 1000) {
+                                        let num = (v / 1000).toFixed(1);
+                                        if (num.endsWith('.0')) num = num.slice(0, -2);
+                                        return '$' + num + 'k';
+                                    }
+                                    return '$' + Math.round(v);
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: { color: textColor },
+                                grid: { color: gridColor }
+                            },
+                            y: { 
+                                ticks: { color: textColor, callback: v => '$' + (v >= 1000 ? (v/1000).toFixed(0) + 'k' : v) },
+                                grid: { color: gridColor }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Render YoY Product Breakdown Table
+            const yoyTbody = document.getElementById('yoyTableBody');
+            if (yoyTbody) {
+                yoyTbody.innerHTML = '';
+                
+                const productMap2026 = {};
+                const productMap2025 = {};
+                const productTypeMap = {};
+
+                filtered2026.forEach(r => {
+                    const prod = getRowValue(r, columnMapping.product) || getRowValue(r, columnMapping.productType) || 'Sin Especificar';
+                    const pType = getRowValue(r, columnMapping.productType) || '-';
+                    const sVal = parseNum(getRowValue(r, columnMapping.sales));
+                    const qVal = parseNum(getRowValue(r, columnMapping.qty));
+
+                    if (!productMap2026[prod]) productMap2026[prod] = { sales: 0, qty: 0 };
+                    productMap2026[prod].sales += sVal;
+                    productMap2026[prod].qty += (qVal > 0 ? qVal : 1);
+                    productTypeMap[prod] = pType;
+                });
+
+                filtered2025Aligned.forEach(r => {
+                    const prod = getRowValue(r, columnMapping.product) || getRowValue(r, columnMapping.productType) || 'Sin Especificar';
+                    const pType = getRowValue(r, columnMapping.productType) || '-';
+                    const sVal = parseNum(getRowValue(r, columnMapping.sales));
+                    const qVal = parseNum(getRowValue(r, columnMapping.qty));
+
+                    if (!productMap2025[prod]) productMap2025[prod] = { sales: 0, qty: 0 };
+                    productMap2025[prod].sales += sVal;
+                    productMap2025[prod].qty += (qVal > 0 ? qVal : 1);
+                    if (!productTypeMap[prod]) productTypeMap[prod] = pType;
+                });
+
+                const allProducts = Array.from(new Set([...Object.keys(productMap2026), ...Object.keys(productMap2025)]));
+
+                // Sort by 2026 sales descending
+                allProducts.sort((a, b) => {
+                    const salesA = productMap2026[a] ? productMap2026[a].sales : 0;
+                    const salesB = productMap2026[b] ? productMap2026[b].sales : 0;
+                    return salesB - salesA;
+                });
+
+                if (allProducts.length === 0) {
+                    yoyTbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-400">No hay datos de productos para mostrar</td></tr>`;
+                } else {
+                    allProducts.forEach(prodName => {
+                        const val26 = productMap2026[prodName] ? productMap2026[prodName].sales : 0;
+                        const qty26 = productMap2026[prodName] ? productMap2026[prodName].qty : 0;
+                        const val25 = productMap2025[prodName] ? productMap2025[prodName].sales : 0;
+                        const qty25 = productMap2025[prodName] ? productMap2025[prodName].qty : 0;
+
+                        const diff = val26 - val25;
+                        const pct = val25 > 0 ? ((diff / val25) * 100) : 0;
+                        const prodType = productTypeMap[prodName] || '-';
+
+                        const tr = document.createElement('tr');
+                        tr.className = 'hover:bg-slate-50 transition';
+
+                        const pctColor = diff > 0 ? 'text-emerald-500 font-bold' : (diff < 0 ? 'text-rose-500 font-bold' : 'text-slate-400');
+
+                        tr.innerHTML = `
+                            <td class="p-3 sm:p-4 font-semibold text-slate-900">${prodName}</td>
+                            <td class="p-3 sm:p-4"><span class="px-2 py-0.5 bg-slate-100 text-slate-700 rounded-md text-xs">${prodType}</span></td>
+                            <td class="p-3 sm:p-4 text-right font-medium">${formatCurrency(val26)}</td>
+                            <td class="p-3 sm:p-4 text-right text-slate-500">${formatCurrency(val25)}</td>
+                            <td class="p-3 sm:p-4 text-right ${diff >= 0 ? 'text-emerald-500 font-semibold' : 'text-rose-500 font-semibold'}">${(diff >= 0 ? '+' : '') + formatCurrency(diff)}</td>
+                            <td class="p-3 sm:p-4 text-right ${pctColor}">${val25 > 0 ? (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%' : (val26 > 0 ? 'Nuevo' : '-')}</td>
+                            <td class="p-3 sm:p-4 text-right text-slate-500">${qty26.toLocaleString()} vs ${qty25.toLocaleString()}</td>
+                        `;
+                        yoyTbody.appendChild(tr);
+                    });
+                }
+            }
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            const viewMain = document.getElementById('viewMain');
+            const viewYoY = document.getElementById('viewYoY');
+            const tabMainBtn = document.getElementById('tabMainBtn');
+            const tabYoYBtn = document.getElementById('tabYoYBtn');
+
+            if (tab === 'main') {
+                viewMain.classList.remove('hidden');
+                viewYoY.classList.add('hidden');
+                tabMainBtn.className = 'px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all duration-200 bg-white text-indigo-600 shadow-sm';
+                tabYoYBtn.className = 'px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all duration-200 text-slate-600 hover:text-slate-900';
+            } else {
+                viewMain.classList.add('hidden');
+                viewYoY.classList.remove('hidden');
+                tabYoYBtn.className = 'px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all duration-200 bg-white text-indigo-600 shadow-sm';
+                tabMainBtn.className = 'px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all duration-200 text-slate-600 hover:text-slate-900';
+                updateYoYView();
+            }
+        }
+
+        function openConfigModal() {
+            const modal = document.getElementById('configModal');
+            if (!modal) return;
+
+            const inputUrlMain = document.getElementById('inputUrlMain');
+            const inputUrl2025 = document.getElementById('inputUrl2025');
+
+            if (inputUrlMain) inputUrlMain.value = localStorage.getItem('csv_url_main') || DEFAULT_CSV_URL;
+            if (inputUrl2025) inputUrl2025.value = localStorage.getItem('csv_url_2025') || DEFAULT_2025_CSV_URL;
+
+            populateModalDropdowns();
+            modal.classList.remove('hidden');
+        }
+
+        function closeConfigModal() {
+            const modal = document.getElementById('configModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function populateModalDropdowns() {
+            const fills = [
+                { id: 'mapSales', key: 'sales' },
+                { id: 'mapDate', key: 'date' },
+                { id: 'mapStore', key: 'store' },
+                { id: 'mapEnv', key: 'env' },
+                { id: 'mapProductType', key: 'productType' },
+                { id: 'mapProduct', key: 'product' },
+                { id: 'mapQty', key: 'qty' }
+            ];
+
+            fills.forEach(item => {
+                const select = document.getElementById(item.id);
+                if (!select) return;
+                select.innerHTML = '';
+                columnsList.forEach(col => {
+                    const opt = document.createElement('option');
+                    opt.value = col;
+                    opt.innerText = col;
+                    if (columnMapping[item.key] === col) opt.selected = true;
+                    select.appendChild(opt);
+                });
+            });
+        }
+
+        function saveConfigAndRefresh() {
+            const inputUrlMain = document.getElementById('inputUrlMain');
+            const inputUrl2025 = document.getElementById('inputUrl2025');
+
+            if (inputUrlMain) localStorage.setItem('csv_url_main', inputUrlMain.value.trim());
+            if (inputUrl2025) localStorage.setItem('csv_url_2025', inputUrl2025.value.trim());
+
+            const mapSales = document.getElementById('mapSales');
+            const mapDate = document.getElementById('mapDate');
+            const mapStore = document.getElementById('mapStore');
+            const mapEnv = document.getElementById('mapEnv');
+            const mapProductType = document.getElementById('mapProductType');
+            const mapProduct = document.getElementById('mapProduct');
+            const mapQty = document.getElementById('mapQty');
+
+            if (mapSales) columnMapping.sales = mapSales.value;
+            if (mapDate) columnMapping.date = mapDate.value;
+            if (mapStore) columnMapping.store = mapStore.value;
+            if (mapEnv) columnMapping.env = mapEnv.value;
+            if (mapProductType) columnMapping.productType = mapProductType.value;
+            if (mapProduct) columnMapping.product = mapProduct.value;
+            if (mapQty) columnMapping.qty = mapQty.value;
+
+            closeConfigModal();
+            loadDashboardData();
+        }
+
+        function refreshData() {
+            loadDashboardData();
+        }
+    </script>
+</body>
+</html>
