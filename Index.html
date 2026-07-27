@@ -171,6 +171,12 @@
                     <button onclick="openConfigModal()" title="Configuración de Columnas" class="p-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition border border-slate-200">
                         <i class="fa-solid fa-gear text-slate-600"></i>
                     </button>
+
+                    <!-- AI Assistant Button -->
+                    <button onclick="openAIModal()" title="Asistente IA de Ventas" class="px-3 py-2 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:to-pink-700 text-white text-xs sm:text-sm font-semibold rounded-xl shadow-md hover:shadow-indigo-500/25 transition flex items-center space-x-1.5">
+                        <i class="fa-solid fa-wand-magic-sparkles text-amber-300 animate-pulse"></i>
+                        <span class="hidden sm:inline">Asistente IA</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -255,6 +261,32 @@
                         <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-3 text-slate-400 text-xs"></i>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- AI Quick Action Banner -->
+        <section class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 text-white rounded-2xl p-4 sm:p-5 custom-shadow mb-6 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-4 border border-indigo-700/40">
+            <div class="flex items-center space-x-3.5 z-10">
+                <div class="w-11 h-11 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/20 text-amber-300 text-xl shrink-0">
+                    <i class="fa-solid fa-brain"></i>
+                </div>
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <h3 class="font-bold text-sm sm:text-base tracking-wide">Inteligencia de Ventas Gemini IA</h3>
+                        <span class="bg-amber-400/20 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-300/30 uppercase tracking-wider">Gemini 3 Flash</span>
+                    </div>
+                    <p class="text-xs text-indigo-200 mt-0.5">Analiza tus métricas en vivo, detecta tendencias clave y genera contenido promocional automáticamente.</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2.5 w-full md:w-auto justify-end z-10 shrink-0">
+                <button onclick="runQuickAIDiagnostic()" class="px-3.5 py-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs font-semibold rounded-xl transition flex items-center space-x-1.5 backdrop-blur-sm">
+                    <i class="fa-solid fa-chart-pie text-indigo-300"></i>
+                    <span>Diagnóstico IA</span>
+                </button>
+                <button onclick="openAIBannerGenerator()" class="px-3.5 py-2 bg-amber-400 hover:bg-amber-300 text-slate-900 text-xs font-bold rounded-xl transition shadow-lg shadow-amber-400/20 flex items-center space-x-1.5">
+                    <i class="fa-solid fa-image"></i>
+                    <span>Crear Banner IA</span>
+                </button>
             </div>
         </section>
 
@@ -377,26 +409,25 @@
                 <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
                         <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center">
-                            <i class="fa-solid fa-table-list text-indigo-500 mr-2"></i>Detalle de Registros (2026)
+                            <i class="fa-solid fa-ranking-star text-indigo-500 mr-2"></i>Top 10 Productos Más Vendidos (2026)
                         </h3>
-                        <p class="text-xs text-slate-400 mt-0.5">Mostrando transacciones que coinciden con los filtros</p>
+                        <p class="text-xs text-slate-400 mt-0.5">Ranking de los 10 productos con mayor volumen de ventas filtrados</p>
                     </div>
                     <span id="recordCountBadge" class="self-start sm:self-auto px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-full border border-slate-200">
-                        0 Registros
+                        Top 10
                     </span>
                 </div>
                 <div class="overflow-x-auto max-h-96">
                     <table class="w-full text-left border-collapse text-xs sm:text-sm">
                         <thead class="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider">
                             <tr>
-                                <th class="p-3 sm:p-4">Fecha</th>
-                                <th class="p-3 sm:p-4">Tienda</th>
-                                <th class="p-3 sm:p-4">Ambiente</th>
-                                <th class="p-3 sm:p-4">Tipo de Producto</th>
+                                <th class="p-3 sm:p-4 text-center">Posición</th>
                                 <th class="p-3 sm:p-4">Producto</th>
-                                <th class="p-3 sm:p-4 text-right">Cantidad</th>
-                                <th class="p-3 sm:p-4 text-right">Precio Unitario</th>
-                                <th class="p-3 sm:p-4 text-right">Venta + Impuestos</th>
+                                <th class="p-3 sm:p-4">Tipo de Producto</th>
+                                <th class="p-3 sm:p-4 text-right">Cantidad Vendida</th>
+                                <th class="p-3 sm:p-4 text-right">Precio Prom. Unitario</th>
+                                <th class="p-3 sm:p-4 text-right">Venta + Impuestos Total</th>
+                                <th class="p-3 sm:p-4 text-center">Estrategia IA</th>
                             </tr>
                         </thead>
                         <tbody id="salesTableBody" class="divide-y divide-slate-100 text-slate-700">
@@ -620,6 +651,163 @@
             <div class="flex justify-end space-x-2 pt-3 border-t border-slate-100">
                 <button onclick="closeConfigModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition">Cancelar</button>
                 <button onclick="saveConfigAndRefresh()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-xs transition">Guardar y Recargar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Interactive Modal -->
+    <div id="aiModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4">
+        <div class="bg-white rounded-2xl max-w-3xl w-full p-5 sm:p-6 shadow-2xl border border-slate-100 flex flex-col max-h-[90vh] animate-fade-in overflow-hidden">
+            
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center pb-4 border-b border-slate-100 shrink-0">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center shadow-md">
+                        <i class="fa-solid fa-wand-magic-sparkles text-amber-300 text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-base sm:text-lg">Centro de Inteligencia Gemini IA</h3>
+                        <p class="text-xs text-slate-500">Análisis avanzado, preguntas en lenguaje natural e imágenes con IA</p>
+                    </div>
+                </div>
+                <button onclick="closeAIModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Modal Navigation Tabs -->
+            <div class="flex border-b border-slate-100 bg-slate-50 p-1 rounded-xl my-4 shrink-0 space-x-1">
+                <button id="aiTabDiagBtn" onclick="switchAITab('diag')" class="flex-1 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-white text-indigo-600 shadow-sm transition flex items-center justify-center space-x-1.5">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Diagnóstico IA</span>
+                </button>
+                <button id="aiTabChatBtn" onclick="switchAITab('chat')" class="flex-1 py-2 text-xs sm:text-sm font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center justify-center space-x-1.5">
+                    <i class="fa-solid fa-comments"></i>
+                    <span>Preguntar a la IA</span>
+                </button>
+                <button id="aiTabBannerBtn" onclick="switchAITab('banner')" class="flex-1 py-2 text-xs sm:text-sm font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center justify-center space-x-1.5">
+                    <i class="fa-solid fa-paintbrush"></i>
+                    <span>Banner Imagen 4.0</span>
+                </button>
+            </div>
+
+            <!-- Modal Content Area -->
+            <div class="flex-1 overflow-y-auto min-h-0 pr-1 space-y-4">
+
+                <!-- TAB 1: DIAGNÓSTICO EJECUTIVO -->
+                <div id="aiTabDiag" class="space-y-4">
+                    <div class="flex items-center justify-between bg-indigo-50/60 p-3 rounded-xl border border-indigo-100/80">
+                        <div class="text-xs text-indigo-900 font-medium flex items-center space-x-2">
+                            <i class="fa-solid fa-circle-info text-indigo-600"></i>
+                            <span>Genera un informe estratégico basado en los filtros aplicados actualmente.</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button id="btnTTS" onclick="playAIAudioSummary()" class="hidden px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition flex items-center space-x-1">
+                                <i class="fa-solid fa-volume-high"></i>
+                                <span>Escuchar Audio</span>
+                            </button>
+                            <button onclick="generateAIDiagnostic()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition flex items-center space-x-1 shadow-sm">
+                                <i class="fa-solid fa-rotate mr-1"></i>
+                                <span>Generar Informe</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="aiDiagLoader" class="hidden py-12 text-center space-y-3">
+                        <div class="inline-block animate-spin text-indigo-600 text-3xl">
+                            <i class="fa-solid fa-circle-notch"></i>
+                        </div>
+                        <p class="text-xs text-slate-500 font-medium">Gemini 3 Flash analizando patrones de ventas y comportamiento de tiendas...</p>
+                    </div>
+
+                    <div id="aiDiagContent" class="text-xs sm:text-sm text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-200 min-h-[160px] whitespace-pre-wrap">
+                        Haz clic en "Generar Informe" para que Gemini IA analice las métricas actuales del dashboard.
+                    </div>
+                </div>
+
+                <!-- TAB 2: PREGUNTAR A LA IA (CHAT) -->
+                <div id="aiTabChat" class="hidden flex flex-col h-full space-y-3">
+                    <div id="aiChatBox" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-3 sm:p-4 overflow-y-auto space-y-3 min-h-[220px] max-h-[320px] text-xs sm:text-sm">
+                        <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-3 text-indigo-900">
+                            <strong>👋 Hola! Soy tu Asistente de Ventas Gemini.</strong>
+                            <p class="mt-1">Puedes hacerme cualquier pregunta sobre tu base de datos actual. Por ejemplo:</p>
+                            <ul class="list-disc list-inside mt-1.5 space-y-0.5 text-indigo-800">
+                                <li>¿Cuál fue la tienda con peor desempeño y qué producto debería impulsarse ahí?</li>
+                                <li>¿Qué porcentaje de ventas representa el Producto Estrella?</li>
+                                <li>Dame 3 ideas para promocionar el tipo de producto más vendido.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-2 pt-2">
+                        <input type="text" id="aiChatInput" onkeydown="if(event.key==='Enter') sendAIChatQuery()" placeholder="Escribe tu consulta sobre las ventas aquí..." class="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        <button onclick="sendAIChatQuery()" id="aiChatSendBtn" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-xs sm:text-sm transition flex items-center space-x-1.5">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span class="hidden sm:inline">Enviar</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- TAB 3: GENERADOR DE BANNERS CON IMAGEN 4.0 -->
+                <div id="aiTabBanner" class="hidden space-y-4">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3 text-xs sm:text-sm">
+                        <label class="block font-semibold text-slate-800">Descripción Prompt para el Arte Promocional (Imagen 4.0)</label>
+                        <textarea id="aiImagePrompt" rows="3" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="Un afiche publicitario moderno y elegante para el producto estrella..."></textarea>
+                        
+                        <div class="flex justify-between items-center pt-1">
+                            <span class="text-slate-400 text-[11px]"><i class="fa-solid fa-bolt text-amber-500 mr-1"></i>Modelo: imagen-4.0-generate-001</span>
+                            <button onclick="generateAIBannerImage()" id="btnGenerateImage" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold rounded-xl text-xs transition shadow-md flex items-center space-x-1.5">
+                                <i class="fa-solid fa-wand-magic"></i>
+                                <span>Generar Imagen IA</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="aiImageLoader" class="hidden py-8 text-center space-y-3">
+                        <div class="inline-block animate-spin text-amber-500 text-3xl">
+                            <i class="fa-solid fa-circle-notch"></i>
+                        </div>
+                        <p class="text-xs text-slate-500 font-medium">Imagen 4.0 renderizando el banner comercial...</p>
+                    </div>
+
+                    <div id="aiImageResult" class="hidden flex flex-col items-center justify-center space-y-3">
+                        <img id="aiGeneratedImg" src="" alt="Banner Promocional IA" class="rounded-2xl shadow-xl max-h-80 w-auto border border-slate-200 object-cover">
+                        <a id="aiDownloadImgLink" href="#" download="Banner_Promocional_IA.png" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-xl transition flex items-center space-x-1.5">
+                            <i class="fa-solid fa-download"></i>
+                            <span>Descargar Imagen Alta Calidad</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Pitch Modal for Product Strategy -->
+    <div id="pitchModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl border border-slate-100 space-y-4 animate-fade-in max-h-[85vh] flex flex-col">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-100 shrink-0">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-bullhorn text-indigo-600 text-lg"></i>
+                    <h3 id="pitchModalTitle" class="font-bold text-slate-900 text-base">Estrategia Comercial IA</h3>
+                </div>
+                <button onclick="closePitchModal()" class="text-slate-400 hover:text-slate-600 p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div id="pitchLoader" class="py-8 text-center space-y-2">
+                <div class="inline-block animate-spin text-indigo-600 text-2xl">
+                    <i class="fa-solid fa-circle-notch"></i>
+                </div>
+                <p class="text-xs text-slate-500 font-medium">Generando pitch de venta y estrategia de marketing con Gemini IA...</p>
+            </div>
+
+            <div id="pitchContent" class="hidden flex-1 overflow-y-auto text-xs sm:text-sm text-slate-700 space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-200 whitespace-pre-wrap">
+            </div>
+
+            <div class="flex justify-end pt-2 border-t border-slate-100 shrink-0">
+                <button onclick="closePitchModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-xs transition">Cerrar</button>
             </div>
         </div>
     </div>
@@ -1065,10 +1253,10 @@
                 // Product aggregation
                 const prod = getRowValue(row, columnMapping.product) || getRowValue(row, columnMapping.productType) || 'Sin Nombre';
                 if (!productTotals[prod]) {
-                    productTotals[prod] = { amount: 0, count: 0 };
+                    productTotals[prod] = { amount: 0, qty: 0 };
                 }
                 productTotals[prod].amount += salesVal;
-                productTotals[prod].count += 1;
+                productTotals[prod].qty += qVal;
             });
 
             // Top Store
@@ -1084,11 +1272,11 @@
             // Top Product
             let topProd = '-';
             let topProdAmt = 0;
-            let topProdCount = 0;
+            let topProdQty = 0;
             for (let p in productTotals) {
                 if (productTotals[p].amount > topProdAmt) {
                     topProdAmt = productTotals[p].amount;
-                    topProdCount = productTotals[p].count;
+                    topProdQty = productTotals[p].qty;
                     topProd = p;
                 }
             }
@@ -1107,7 +1295,7 @@
                 kpiTopProdElem.title = topProd;
             }
             if (document.getElementById('kpiTopProductAmount')) {
-                document.getElementById('kpiTopProductAmount').innerText = `${topProdCount} unid. (${formatCurrencyNoDecimals(topProdAmt)})`;
+                document.getElementById('kpiTopProductAmount').innerText = `${Math.round(topProdQty).toLocaleString('en-US')} unid. (${formatCurrencyNoDecimals(topProdAmt)})`;
             }
         }
 
@@ -1353,37 +1541,66 @@
             if (!tbody) return;
 
             tbody.innerHTML = '';
-            if (badge) badge.innerText = `${filteredData2026.length} Registros`;
 
             if (filteredData2026.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400">No hay registros para los filtros seleccionados</td></tr>`;
+                if (badge) badge.innerText = '0 Productos';
+                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-400">No hay registros para los filtros seleccionados</td></tr>`;
                 return;
             }
 
-            // Display top 100 records for optimal performance
-            const displayList = filteredData2026.slice(0, 100);
-            displayList.forEach(row => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-50 transition';
-                
-                const fecha = getRowValue(row, columnMapping.date) || '-';
-                const tienda = getRowValue(row, columnMapping.store) || '-';
-                const ambiente = getRowValue(row, columnMapping.env) || '-';
-                const tipoProd = getRowValue(row, columnMapping.productType) || '-';
-                const prod = getRowValue(row, columnMapping.product) || '-';
+            // Agrupar registros por producto
+            const productAgg = {};
+            filteredData2026.forEach(row => {
+                const prod = getRowValue(row, columnMapping.product) || getRowValue(row, columnMapping.productType) || 'Sin Nombre';
+                const pType = getRowValue(row, columnMapping.productType) || '-';
                 const monto = parseNum(getRowValue(row, columnMapping.sales));
                 const cant = parseNum(getRowValue(row, columnMapping.qty));
-                const precioUnitario = cant > 0 ? (monto / cant) : 0;
+
+                if (!productAgg[prod]) {
+                    productAgg[prod] = {
+                        name: prod,
+                        type: pType,
+                        totalSales: 0,
+                        totalQty: 0
+                    };
+                }
+                productAgg[prod].totalSales += monto;
+                productAgg[prod].totalQty += cant;
+            });
+
+            // Ordenar de mayor a menor según Ventas + Impuestos y tomar el Top 10
+            const sortedProducts = Object.values(productAgg).sort((a, b) => b.totalSales - a.totalSales);
+            const top10 = sortedProducts.slice(0, 10);
+
+            if (badge) badge.innerText = `Top ${top10.length} de ${Object.keys(productAgg).length} Productos`;
+
+            top10.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-50 transition';
+
+                const precioPromedio = item.totalQty > 0 ? (item.totalSales / item.totalQty) : 0;
+
+                // Badge de ranking
+                let rankBadge = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full font-bold text-xs bg-slate-100 text-slate-600">${index + 1}</span>`;
+                if (index === 0) rankBadge = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full font-bold text-xs bg-amber-100 text-amber-700 border border-amber-300"><i class="fa-solid fa-crown text-[10px]"></i></span>`;
+                else if (index === 1) rankBadge = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full font-bold text-xs bg-slate-200 text-slate-700">2</span>`;
+                else if (index === 2) rankBadge = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full font-bold text-xs bg-amber-700/10 text-amber-800">3</span>`;
+
+                const escapedName = item.name.replace(/'/g, "\\'");
 
                 tr.innerHTML = `
-                    <td class="p-3 sm:p-4 font-medium text-slate-900">${fecha}</td>
-                    <td class="p-3 sm:p-4"><span class="px-2 py-0.5 bg-slate-100 text-slate-700 rounded-md text-xs">${tienda}</span></td>
-                    <td class="p-3 sm:p-4">${ambiente}</td>
-                    <td class="p-3 sm:p-4">${tipoProd}</td>
-                    <td class="p-3 sm:p-4 font-medium">${prod}</td>
-                    <td class="p-3 sm:p-4 text-right font-medium">${Math.round(cant).toLocaleString('en-US')}</td>
-                    <td class="p-3 sm:p-4 text-right font-medium text-slate-600">${formatCurrency(precioUnitario)}</td>
-                    <td class="p-3 sm:p-4 text-right font-bold text-slate-900">${formatCurrency(monto)}</td>
+                    <td class="p-3 sm:p-4 text-center font-bold">${rankBadge}</td>
+                    <td class="p-3 sm:p-4 font-semibold text-slate-900">${item.name}</td>
+                    <td class="p-3 sm:p-4"><span class="px-2 py-0.5 bg-slate-100 text-slate-700 rounded-md text-xs">${item.type}</span></td>
+                    <td class="p-3 sm:p-4 text-right font-medium">${Math.round(item.totalQty).toLocaleString('en-US')}</td>
+                    <td class="p-3 sm:p-4 text-right font-medium text-slate-600">${formatCurrency(precioPromedio)}</td>
+                    <td class="p-3 sm:p-4 text-right font-bold text-slate-900">${formatCurrency(item.totalSales)}</td>
+                    <td class="p-3 sm:p-4 text-center">
+                        <button onclick="generateProductPitch('${escapedName}', ${item.totalSales}, ${item.totalQty})" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-lg border border-indigo-200 transition flex items-center space-x-1 mx-auto">
+                            <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i>
+                            <span>Pitch IA</span>
+                        </button>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1398,80 +1615,88 @@
             const selectedTienda = document.getElementById('filterTienda')?.value || 'ALL';
             const selectedAmbiente = document.getElementById('filterAmbiente')?.value || 'ALL';
             const selectedTipoProducto = document.getElementById('filterTipoProducto')?.value || 'ALL';
+            const selectedMes = document.getElementById('filterMes')?.value || 'ALL';
+            const searchText = (document.getElementById('filterSearch')?.value || '').toLowerCase().trim();
 
-            // Filter 2026 dataset
-            const filtered2026 = rawData2026.filter(r => {
+            // Common filter predicate
+            const passesCommonFilters = (r) => {
                 if (selectedTienda !== 'ALL' && getRowValue(r, columnMapping.store) !== selectedTienda) return false;
                 if (selectedAmbiente !== 'ALL' && getRowValue(r, columnMapping.env) !== selectedAmbiente) return false;
                 if (selectedTipoProducto !== 'ALL' && getRowValue(r, columnMapping.productType) !== selectedTipoProducto) return false;
+                if (searchText !== '') {
+                    const rowContent = Object.values(r).join(' ').toLowerCase();
+                    if (!rowContent.includes(searchText)) return false;
+                }
                 return true;
-            });
+            };
 
-            // Filter 2025 dataset by active filter selections
-            const filtered2025 = rawData2025.filter(r => {
-                if (selectedTienda !== 'ALL' && getRowValue(r, columnMapping.store) !== selectedTienda) return false;
-                if (selectedAmbiente !== 'ALL' && getRowValue(r, columnMapping.env) !== selectedAmbiente) return false;
-                if (selectedTipoProducto !== 'ALL' && getRowValue(r, columnMapping.productType) !== selectedTipoProducto) return false;
-                return true;
-            });
+            const filtered2026Common = rawData2026.filter(passesCommonFilters);
+            const filtered2025Common = rawData2025.filter(passesCommonFilters);
 
-            // Find last active month in 2026 for aligned period comparison
+            // Determine active months to compare
+            let activeMonthIndices = [];
             let maxMonth2026 = 0;
-            const monthly2026 = new Array(12).fill(0);
-            const tx2026 = new Array(12).fill(0);
-            const qty2026 = new Array(12).fill(0);
 
+            if (selectedMes !== 'ALL') {
+                const targetM = parseInt(selectedMes, 10);
+                activeMonthIndices = [targetM];
+                maxMonth2026 = targetM;
+            } else {
+                filtered2026Common.forEach(r => {
+                    let d = parseDateDetails(getRowValue(r, columnMapping.date));
+                    if (d.monthIndex !== null && d.monthIndex >= 0 && d.monthIndex < 12) {
+                        if (d.monthIndex > maxMonth2026) maxMonth2026 = d.monthIndex;
+                    }
+                });
+                for (let i = 0; i <= maxMonth2026; i++) {
+                    activeMonthIndices.push(i);
+                }
+            }
+
+            // Filter datasets strictly according to active month constraints
+            const filtered2026 = filtered2026Common.filter(r => {
+                let d = parseDateDetails(getRowValue(r, columnMapping.date));
+                return d.monthIndex !== null && activeMonthIndices.includes(d.monthIndex);
+            });
+
+            const filtered2025Aligned = filtered2025Common.filter(r => {
+                let d = parseDateDetails(getRowValue(r, columnMapping.date));
+                return d.monthIndex !== null && activeMonthIndices.includes(d.monthIndex);
+            });
+
+            // Monthly aggregations
+            const monthly2026 = new Array(12).fill(0);
+            const qty2026 = new Array(12).fill(0);
             filtered2026.forEach(r => {
                 let d = parseDateDetails(getRowValue(r, columnMapping.date));
                 if (d.monthIndex !== null && d.monthIndex >= 0 && d.monthIndex < 12) {
                     monthly2026[d.monthIndex] += parseNum(getRowValue(r, columnMapping.sales));
-                    tx2026[d.monthIndex] += 1;
-                    
-                    // Sum directly from "cantidad" column
-                    const qVal = parseNum(getRowValue(r, columnMapping.qty));
-                    qty2026[d.monthIndex] += qVal;
-                    if (d.monthIndex > maxMonth2026) maxMonth2026 = d.monthIndex;
+                    qty2026[d.monthIndex] += parseNum(getRowValue(r, columnMapping.qty));
                 }
             });
 
-            // Filter 2025 data strictly up to maxMonth2026
             const monthly2025 = new Array(12).fill(0);
-            const tx2025 = new Array(12).fill(0);
             const qty2025 = new Array(12).fill(0);
-
-            const filtered2025Aligned = filtered2025.filter(r => {
-                let d = parseDateDetails(getRowValue(r, columnMapping.date));
-                return d.monthIndex !== null && d.monthIndex >= 0 && d.monthIndex <= maxMonth2026;
-            });
-
             filtered2025Aligned.forEach(r => {
                 let d = parseDateDetails(getRowValue(r, columnMapping.date));
                 if (d.monthIndex !== null && d.monthIndex >= 0 && d.monthIndex < 12) {
                     monthly2025[d.monthIndex] += parseNum(getRowValue(r, columnMapping.sales));
-                    tx2025[d.monthIndex] += 1;
-                    
-                    // Sum directly from "cantidad" column
-                    const qVal = parseNum(getRowValue(r, columnMapping.qty));
-                    qty2025[d.monthIndex] += qVal;
+                    qty2025[d.monthIndex] += parseNum(getRowValue(r, columnMapping.qty));
                 }
             });
 
-            // Sum totals up to maxMonth2026 for aligned period comparison
+            // Calculate Period Totals based strictly on active month selection
             let sum2026 = 0;
             let sum2025 = 0;
-            let count2026 = 0;
-            let count2025 = 0;
             let totalQty2026 = 0;
             let totalQty2025 = 0;
 
-            for (let i = 0; i <= maxMonth2026; i++) {
-                sum2026 += monthly2026[i];
-                sum2025 += monthly2025[i];
-                count2026 += tx2026[i];
-                count2025 += tx2025[i];
-                totalQty2026 += qty2026[i];
-                totalQty2025 += qty2025[i];
-            }
+            activeMonthIndices.forEach(idx => {
+                sum2026 += monthly2026[idx];
+                sum2025 += monthly2025[idx];
+                totalQty2026 += qty2026[idx];
+                totalQty2025 += qty2025[idx];
+            });
 
             const diffAmt = sum2026 - sum2025;
             const pctGrowth = sum2025 > 0 ? ((diffAmt / sum2025) * 100) : 0;
@@ -1590,11 +1815,11 @@
                 }
             }
 
-            // Render YoY Monthly Chart only for elapsed months (0 to maxMonth2026)
+            // Render YoY Monthly Chart for active selected month(s)
             const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-            const displayMonthNames = monthNames.slice(0, maxMonth2026 + 1);
-            const displayMonthly2026 = monthly2026.slice(0, maxMonth2026 + 1);
-            const displayMonthly2025 = monthly2025.slice(0, maxMonth2026 + 1);
+            const displayMonthNames = activeMonthIndices.map(i => monthNames[i]);
+            const displayMonthly2026 = activeMonthIndices.map(i => monthly2026[i]);
+            const displayMonthly2025 = activeMonthIndices.map(i => monthly2025[i]);
 
             if (chartYoYMonthlyInst) chartYoYMonthlyInst.destroy();
             const ctxYoYMonthly = document.getElementById('chartYoYMonthly')?.getContext('2d');
@@ -1657,7 +1882,7 @@
                 });
             }
 
-            // Render YoY Store Chart using strictly aligned 2025 data (up to maxMonth2026)
+            // Render YoY Store Chart using strictly aligned data
             const storeMap2026 = {};
             const storeMap2025 = {};
             filtered2026.forEach(r => {
@@ -1734,7 +1959,7 @@
                 });
             }
 
-            // Render YoY Product Breakdown Table
+            // Render YoY Product Breakdown Table (Top 10)
             const yoyTbody = document.getElementById('yoyTableBody');
             if (yoyTbody) {
                 yoyTbody.innerHTML = '';
@@ -1769,17 +1994,19 @@
 
                 const allProducts = Array.from(new Set([...Object.keys(productMap2026), ...Object.keys(productMap2025)]));
 
-                // Sort by 2026 sales descending
+                // Sort by 2026 sales descending and take Top 10
                 allProducts.sort((a, b) => {
                     const salesA = productMap2026[a] ? productMap2026[a].sales : 0;
                     const salesB = productMap2026[b] ? productMap2026[b].sales : 0;
                     return salesB - salesA;
                 });
 
-                if (allProducts.length === 0) {
+                const top10YoY = allProducts.slice(0, 10);
+
+                if (top10YoY.length === 0) {
                     yoyTbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-400">No hay datos de productos para mostrar</td></tr>`;
                 } else {
-                    allProducts.forEach(prodName => {
+                    top10YoY.forEach((prodName, index) => {
                         const val26 = productMap2026[prodName] ? productMap2026[prodName].sales : 0;
                         const qty26 = productMap2026[prodName] ? productMap2026[prodName].qty : 0;
                         const val25 = productMap2025[prodName] ? productMap2025[prodName].sales : 0;
@@ -1794,14 +2021,18 @@
 
                         const pctColor = diff > 0 ? 'text-emerald-500 font-bold' : (diff < 0 ? 'text-rose-500 font-bold' : 'text-slate-400');
 
+                        // Rank badge
+                        let rankBadge = `<span class="inline-flex items-center justify-center w-5 h-5 rounded-full font-bold text-[10px] bg-slate-100 text-slate-600 mr-2">${index + 1}</span>`;
+                        if (index === 0) rankBadge = `<span class="inline-flex items-center justify-center w-5 h-5 rounded-full font-bold text-[10px] bg-amber-100 text-amber-700 border border-amber-300 mr-2"><i class="fa-solid fa-crown text-[8px]"></i></span>`;
+
                         tr.innerHTML = `
-                            <td class="p-3 sm:p-4 font-semibold text-slate-900">${prodName}</td>
+                            <td class="p-3 sm:p-4 font-semibold text-slate-900 flex items-center">${rankBadge}${prodName}</td>
                             <td class="p-3 sm:p-4"><span class="px-2 py-0.5 bg-slate-100 text-slate-700 rounded-md text-xs">${prodType}</span></td>
                             <td class="p-3 sm:p-4 text-right font-medium">${formatCurrency(val26)}</td>
                             <td class="p-3 sm:p-4 text-right text-slate-500">${formatCurrency(val25)}</td>
                             <td class="p-3 sm:p-4 text-right ${diff >= 0 ? 'text-emerald-500 font-semibold' : 'text-rose-500 font-semibold'}">${(diff >= 0 ? '+' : '') + formatCurrency(diff)}</td>
                             <td class="p-3 sm:p-4 text-right ${pctColor}">${val25 > 0 ? (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%' : (val26 > 0 ? 'Nuevo' : '-')}</td>
-                            <td class="p-3 sm:p-4 text-right text-slate-500">${qty26.toLocaleString()} vs ${qty25.toLocaleString()}</td>
+                            <td class="p-3 sm:p-4 text-right text-slate-500">${Math.round(qty26).toLocaleString()} vs ${Math.round(qty25).toLocaleString()}</td>
                         `;
                         yoyTbody.appendChild(tr);
                     });
@@ -1903,6 +2134,361 @@
 
         function refreshData() {
             loadDashboardData();
+        }
+
+        // Exponential Backoff API Fetch Helper
+        async function fetchGeminiAPI(url, payload, maxRetries = 3) {
+            let delay = 1000;
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (response.ok) return await response.json();
+                } catch (err) {
+                    console.debug(`Intento ${i+1} de la API falló, reintentando...`, err);
+                }
+                await new Promise(res => setTimeout(res, delay));
+                delay *= 2;
+            }
+            throw new Error('No se pudo establecer comunicación con la API de Gemini después de varios reintentos.');
+        }
+
+        // Open AI Center Modal
+        function openAIModal() {
+            const modal = document.getElementById('aiModal');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closeAIModal() {
+            const modal = document.getElementById('aiModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function switchAITab(tab) {
+            const tabs = ['diag', 'chat', 'banner'];
+            tabs.forEach(t => {
+                const content = document.getElementById(`aiTab${t.charAt(0).toUpperCase() + t.slice(1)}`);
+                const btn = document.getElementById(`aiTab${t.charAt(0).toUpperCase() + t.slice(1)}Btn`);
+                if (t === tab) {
+                    if (content) content.classList.remove('hidden');
+                    if (btn) btn.className = 'flex-1 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-white text-indigo-600 shadow-sm transition flex items-center justify-center space-x-1.5';
+                } else {
+                    if (content) content.classList.add('hidden');
+                    if (btn) btn.className = 'flex-1 py-2 text-xs sm:text-sm font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center justify-center space-x-1.5';
+                }
+            });
+        }
+
+        function runQuickAIDiagnostic() {
+            openAIModal();
+            switchAITab('diag');
+            generateAIDiagnostic();
+        }
+
+        function openAIBannerGenerator() {
+            openAIModal();
+            switchAITab('banner');
+            
+            // Auto populate image prompt with star product
+            const starProd = document.getElementById('kpiTopProduct')?.innerText || 'producto líder';
+            const promptBox = document.getElementById('aiImagePrompt');
+            if (promptBox && (!promptBox.value || promptBox.value.trim() === '')) {
+                promptBox.value = `Un afiche publicitario profesional, moderno y de alta calidad para promocionar "${starProd}" en una tienda elegante, iluminación cálida, estilo fotografía comercial 4K.`;
+            }
+        }
+
+        // Helper: Summary of current metrics for LLM context
+        function getDatasetSummaryContext() {
+            let totalSales = 0;
+            let totalQty = 0;
+            const storeSales = {};
+            const prodSales = {};
+
+            filteredData2026.forEach(r => {
+                const s = parseNum(getRowValue(r, columnMapping.sales));
+                const q = parseNum(getRowValue(r, columnMapping.qty));
+                const store = getRowValue(r, columnMapping.store) || 'General';
+                const prod = getRowValue(r, columnMapping.product) || getRowValue(r, columnMapping.productType) || 'Producto';
+
+                totalSales += s;
+                totalQty += q;
+                storeSales[store] = (storeSales[store] || 0) + s;
+                prodSales[prod] = (prodSales[prod] || 0) + s;
+            });
+
+            const topStore = Object.keys(storeSales).sort((a,b) => storeSales[b] - storeSales[a])[0] || '-';
+            const topProd = Object.keys(prodSales).sort((a,b) => prodSales[b] - prodSales[a])[0] || '-';
+
+            return `Métricas Actuales (2026):
+- Ventas Totales: ${formatCurrency(totalSales)}
+- Cantidad Total Vendida: ${Math.round(totalQty)} unidades
+- Tienda Líder: ${topStore} (${formatCurrency(storeSales[topStore] || 0)})
+- Producto Estrella: ${topProd} (${formatCurrency(prodSales[topProd] || 0)})
+- Registros analizados: ${filteredData2026.length}`;
+        }
+
+        // 1. Generate Executive Diagnostic Report (Gemini 3 Flash)
+        let lastGeneratedText = "";
+        async function generateAIDiagnostic() {
+            const loader = document.getElementById('aiDiagLoader');
+            const content = document.getElementById('aiDiagContent');
+            const btnTTS = document.getElementById('btnTTS');
+
+            if (loader) loader.classList.remove('hidden');
+            if (content) content.classList.add('hidden');
+            if (btnTTS) btnTTS.classList.add('hidden');
+
+            const contextData = getDatasetSummaryContext();
+            const systemPrompt = "Actúa como un Director Comercial y Analista de Inteligencia de Negocios senior. Proporciona un diagnóstico ejecutivo claro, estructurado, conciso y en tono profesional en español.";
+            const userPrompt = `Analiza los siguientes datos actuales de ventas e imparte un informe comercial ejecutivo:\n\n${contextData}\n\nEstructura tu respuesta en:\n1. 📊 Diagnóstico General\n2. 🌟 Fortalezas Clave\n3. ⚠️ Riesgos o Áreas de Mejora\n4. 🚀 3 Recomendaciones Estratégicas concretas.`;
+
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userPrompt }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+
+            try {
+                const result = await fetchGeminiAPI(apiUrl, payload);
+                const text = result?.candidates?.[0]?.content?.parts?.[0]?.text || "No se pudo generar el diagnóstico.";
+                
+                lastGeneratedText = text;
+                if (content) {
+                    content.innerText = text;
+                    content.classList.remove('hidden');
+                }
+                if (btnTTS) btnTTS.classList.remove('hidden');
+            } catch (err) {
+                if (content) {
+                    content.innerText = "Error al conectar con la IA de Gemini: " + err.message;
+                    content.classList.remove('hidden');
+                }
+            } finally {
+                if (loader) loader.classList.add('hidden');
+            }
+        }
+
+        // 2. Chat with AI about Sales
+        async function sendAIChatQuery() {
+            const input = document.getElementById('aiChatInput');
+            const chatBox = document.getElementById('aiChatBox');
+            if (!input || !input.value.trim() || !chatBox) return;
+
+            const query = input.value.trim();
+            input.value = '';
+
+            // User Message Bubble
+            const userBubble = document.createElement('div');
+            userBubble.className = 'bg-indigo-600 text-white rounded-xl p-3 self-end text-right ml-8 shadow-sm';
+            userBubble.innerText = query;
+            chatBox.appendChild(userBubble);
+
+            // Bot Thinking Bubble
+            const botBubble = document.createElement('div');
+            botBubble.className = 'bg-slate-100 border border-slate-200 text-slate-800 rounded-xl p-3 mr-8 shadow-sm animate-pulse';
+            botBubble.innerText = 'Pensando...';
+            chatBox.appendChild(botBubble);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            const contextData = getDatasetSummaryContext();
+            const systemPrompt = "Eres el Asistente de Inteligencia de Negocios de la empresa. Responde de forma amable, precisa y ejecutiva utilizando los datos proporcionados.";
+            const userPrompt = `Contexto del Dashboard:\n${contextData}\n\nPregunta del Usuario: ${query}`;
+
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userPrompt }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+
+            try {
+                const result = await fetchGeminiAPI(apiUrl, payload);
+                const text = result?.candidates?.[0]?.content?.parts?.[0]?.text || "No obtuve respuesta.";
+                botBubble.classList.remove('animate-pulse');
+                botBubble.innerText = text;
+            } catch (err) {
+                botBubble.classList.remove('animate-pulse');
+                botBubble.className = 'bg-rose-50 text-rose-700 border border-rose-200 rounded-xl p-3 mr-8';
+                botBubble.innerText = "Error al procesar la consulta: " + err.message;
+            } finally {
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }
+
+        // 3. Generate Banner Image (Imagen 4.0)
+        async function generateAIBannerImage() {
+            const promptInput = document.getElementById('aiImagePrompt');
+            const loader = document.getElementById('aiImageLoader');
+            const resultBox = document.getElementById('aiImageResult');
+            const imgElem = document.getElementById('aiGeneratedImg');
+            const downloadBtn = document.getElementById('aiDownloadImgLink');
+
+            if (!promptInput || !promptInput.value.trim()) return;
+
+            if (loader) loader.classList.remove('hidden');
+            if (resultBox) resultBox.classList.add('hidden');
+
+            const promptText = promptInput.value.trim();
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`;
+
+            const payload = {
+                instances: [{ prompt: promptText }],
+                parameters: { sampleCount: 1 }
+            };
+
+            try {
+                const result = await fetchGeminiAPI(apiUrl, payload);
+                const base64Bytes = result?.predictions?.[0]?.bytesBase64Encoded;
+                if (base64Bytes) {
+                    const imgSrc = `data:image/png;base64,${base64Bytes}`;
+                    if (imgElem) imgElem.src = imgSrc;
+                    if (downloadBtn) downloadBtn.href = imgSrc;
+                    if (resultBox) resultBox.classList.remove('hidden');
+                } else {
+                    alert("No se pudo generar la imagen. Intenta con otra descripción.");
+                }
+            } catch (err) {
+                alert("Error al generar la imagen con Imagen 4.0: " + err.message);
+            } finally {
+                if (loader) loader.classList.add('hidden');
+            }
+        }
+
+        // 4. Generate Product Pitch Strategy Modal (Gemini 3 Flash)
+        async function generateProductPitch(productName, salesAmount, qty) {
+            const modal = document.getElementById('pitchModal');
+            const modalTitle = document.getElementById('pitchModalTitle');
+            const loader = document.getElementById('pitchLoader');
+            const content = document.getElementById('pitchContent');
+
+            if (modalTitle) modalTitle.innerText = `Estrategia IA: ${productName}`;
+            if (modal) modal.classList.remove('hidden');
+            if (loader) loader.classList.remove('hidden');
+            if (content) content.classList.add('hidden');
+
+            const systemPrompt = "Actúa como un estratega de marketing digital y ventas b2b/b2c experto. Genera un pitch comercial de alto impacto.";
+            const userPrompt = `Crea una estrategia comercial para el producto "${productName}".
+Métricas actuales del producto:
+- Ventas Totales: ${formatCurrency(salesAmount)}
+- Unidades Vendidas: ${Math.round(qty)}
+
+Genera:
+1. 🎯 Perfil del Cliente Ideal
+2. 📢 Un Script / Pitch de Venta rápido (3 frases persuasivas)
+3. 📱 Estrategia de Redes Sociales (Copy sugerido e idea visual)
+4. 💡 Oferta o Gancho Promocional recomendado.`;
+
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userPrompt }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+
+            try {
+                const result = await fetchGeminiAPI(apiUrl, payload);
+                const text = result?.candidates?.[0]?.content?.parts?.[0]?.text || "No se pudo generar la estrategia.";
+                if (content) {
+                    content.innerText = text;
+                    content.classList.remove('hidden');
+                }
+            } catch (err) {
+                if (content) {
+                    content.innerText = "Error al generar estrategia: " + err.message;
+                    content.classList.remove('hidden');
+                }
+            } finally {
+                if (loader) loader.classList.add('hidden');
+            }
+        }
+
+        function closePitchModal() {
+            const modal = document.getElementById('pitchModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        // 5. Audio Synthesis TTS (gemini-2.5-flash-preview-tts)
+        function pcmToWav(pcm16, sampleRate = 24000) {
+            const buffer = new ArrayBuffer(44 + pcm16.length * 2);
+            const view = new DataView(buffer);
+            const writeString = (offset, str) => {
+                for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
+            };
+            writeString(0, 'RIFF');
+            view.setUint32(4, 36 + pcm16.length * 2, true);
+            writeString(8, 'WAVE');
+            writeString(12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true);
+            view.setUint16(22, 1, true);
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * 2, true);
+            view.setUint16(32, 2, true);
+            view.setUint16(34, 16, true);
+            writeString(36, 'data');
+            view.setUint32(40, pcm16.length * 2, true);
+            for (let i = 0; i < pcm16.length; i++) {
+                view.setInt16(44 + i * 2, pcm16[i], true);
+            }
+            return new Blob([buffer], { type: 'audio/wav' });
+        }
+
+        async function playAIAudioSummary() {
+            if (!lastGeneratedText) return;
+
+            const btnTTS = document.getElementById('btnTTS');
+            const origHTML = btnTTS ? btnTTS.innerHTML : '';
+            if (btnTTS) btnTTS.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sintetizando...';
+
+            const cleanText = "Resumen de ventas: " + lastGeneratedText.replace(/[*#]/g, '').slice(0, 300);
+
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: `Say in a professional tone: ${cleanText}` }] }],
+                generationConfig: {
+                    responseModalities: ["AUDIO"],
+                    speechConfig: {
+                        voiceConfig: {
+                            prebuiltVoiceConfig: { voiceName: "Kore" }
+                        }
+                    }
+                }
+            };
+
+            try {
+                const response = await fetchGeminiAPI(apiUrl, payload);
+                const part = response?.candidates?.[0]?.content?.parts?.[0];
+                const base64Audio = part?.inlineData?.data;
+                
+                if (base64Audio) {
+                    const binary = atob(base64Audio);
+                    const len = binary.length;
+                    const bytes = new Uint8Array(len);
+                    for (let i = 0; i < len; i++) bytes[i] = binary.charCodeAt(i);
+                    const pcm16 = new Int16Array(bytes.buffer);
+                    
+                    const wavBlob = pcmToWav(pcm16, 24000);
+                    const audioUrl = URL.createObjectURL(wavBlob);
+                    const audio = new Audio(audioUrl);
+                    audio.play();
+                } else {
+                    alert("No se pudo obtener el archivo de audio.");
+                }
+            } catch (err) {
+                alert("Error al generar audio TTS: " + err.message);
+            } finally {
+                if (btnTTS) btnTTS.innerHTML = origHTML;
+            }
         }
     </script>
 </body>
