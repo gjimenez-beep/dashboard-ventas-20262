@@ -90,7 +90,8 @@
             color: #94a3b8 !important;
         }
         body.dark-mode select, 
-        body.dark-mode input {
+        body.dark-mode input,
+        body.dark-mode textarea {
             background-color: #0f172a !important;
             border-color: #334155 !important;
             color: #f8fafc !important;
@@ -121,7 +122,9 @@
         body.dark-mode .hover\:bg-slate-50:hover {
             background-color: #334155 !important;
         }
-        body.dark-mode #configModal .bg-white {
+        body.dark-mode #configModal .bg-white,
+        body.dark-mode #aiModal .bg-white,
+        body.dark-mode #pitchModal .bg-white {
             background-color: #1e293b !important;
             color: #f8fafc !important;
         }
@@ -168,7 +171,7 @@
                     </button>
 
                     <!-- Settings Button -->
-                    <button onclick="openConfigModal()" title="Configuración de Columnas" class="p-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition border border-slate-200">
+                    <button onclick="openConfigModal()" title="Configuración de Columnas y API Key" class="p-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition border border-slate-200">
                         <i class="fa-solid fa-gear text-slate-600"></i>
                     </button>
 
@@ -404,7 +407,7 @@
                 </div>
             </section>
 
-            <!-- Detailed Data Table -->
+            <!-- Detailed Data Table (Top 10) -->
             <section class="bg-white rounded-2xl custom-shadow border border-slate-100 overflow-hidden">
                 <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
@@ -469,7 +472,7 @@
                     </div>
                 </div>
 
-                <!-- Tarjeta 2: Cantidad de Productos YoY (Sumatoria de la columna "cantidad") -->
+                <!-- Tarjeta 2: Cantidad de Productos YoY -->
                 <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100 flex flex-col justify-between">
                     <div>
                         <div class="flex items-center justify-between">
@@ -557,11 +560,11 @@
                 </div>
             </section>
 
-            <!-- Table: Product Breakdown 2026 vs 2025 -->
+            <!-- Table: Top 10 YoY Product Breakdown -->
             <section class="bg-white rounded-2xl custom-shadow border border-slate-100 overflow-hidden">
                 <div class="p-5 border-b border-slate-100">
                     <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center">
-                        <i class="fa-solid fa-boxes-stacked text-indigo-500 mr-2"></i>Comparativo de Ventas por Producto
+                        <i class="fa-solid fa-boxes-stacked text-indigo-500 mr-2"></i>Comparativo de Ventas por Producto (Top 10)
                     </h3>
                     <p class="text-xs text-slate-400 mt-0.5">Rendimiento y variación de ventas por producto en el período equivalente</p>
                 </div>
@@ -602,10 +605,23 @@
             </div>
 
             <div class="space-y-4 text-xs sm:text-sm">
+                <!-- Gemini API Key Input Field -->
+                <div class="bg-indigo-50/70 p-3.5 rounded-xl border border-indigo-200">
+                    <label class="block font-bold text-indigo-950 mb-1 flex items-center justify-between">
+                        <span class="flex items-center"><i class="fa-solid fa-key text-amber-500 mr-1.5"></i>Google Gemini API Key</span>
+                        <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-[11px] text-indigo-600 hover:underline font-semibold flex items-center">
+                            <span>Obtener Gratis</span>
+                            <i class="fa-solid fa-up-right-from-square ml-1 text-[9px]"></i>
+                        </a>
+                    </label>
+                    <input type="password" id="inputApiKey" class="w-full bg-white border border-indigo-200 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="AIzaSy...">
+                    <p class="text-[11px] text-indigo-700 mt-1">Requerida para el Diagnóstico IA, Generación de Banners y Chat de Ventas.</p>
+                </div>
+
                 <!-- Main CSV URL Input -->
                 <div>
                     <label class="block font-semibold text-slate-700 mb-1">URL CSV de Google Sheets (Principal 2026)</label>
-                    <input type="text" id="inputUrlMain" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="https://docs.google.com/spreadsheets/.../pub?output=csv">
+                    <input type="text" id="inputUrlMain" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-xs" placeholder="https://docs.google.com/spreadsheets/.../pub?output=csv">
                 </div>
 
                 <!-- 2025 CSV URL Input (Hidden) -->
@@ -675,8 +691,20 @@
                 </button>
             </div>
 
+            <!-- API Key Inline Setup Banner -->
+            <div id="aiKeyBanner" class="bg-amber-50 border border-amber-200 p-3 rounded-xl my-3 shrink-0 flex flex-col sm:flex-row items-center justify-between gap-2">
+                <div class="flex items-center space-x-2 text-xs text-amber-900">
+                    <i class="fa-solid fa-key text-amber-600 text-base"></i>
+                    <span>Ingresa tu <strong>Gemini API Key</strong> para habilitar las funciones IA:</span>
+                </div>
+                <div class="flex items-center space-x-2 w-full sm:w-auto">
+                    <input type="password" id="aiModalApiKey" class="bg-white border border-amber-300 rounded-lg px-2.5 py-1 text-xs w-full sm:w-48 focus:outline-none focus:ring-2 focus:ring-amber-500" placeholder="AIzaSy...">
+                    <button onclick="saveApiKeyFromModal()" class="px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-lg shrink-0 transition">Guardar</button>
+                </div>
+            </div>
+
             <!-- Modal Navigation Tabs -->
-            <div class="flex border-b border-slate-100 bg-slate-50 p-1 rounded-xl my-4 shrink-0 space-x-1">
+            <div class="flex border-b border-slate-100 bg-slate-50 p-1 rounded-xl mb-4 shrink-0 space-x-1">
                 <button id="aiTabDiagBtn" onclick="switchAITab('diag')" class="flex-1 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-white text-indigo-600 shadow-sm transition flex items-center justify-center space-x-1.5">
                     <i class="fa-solid fa-chart-line"></i>
                     <span>Diagnóstico IA</span>
@@ -823,6 +851,33 @@
         let currentTab = 'main';
         let columnsList = [];
 
+        // API Key Helper Functions
+        function getStoredApiKey() {
+            return localStorage.getItem('gemini_api_key') || '';
+        }
+
+        function saveApiKeyFromModal() {
+            const val = document.getElementById('aiModalApiKey')?.value.trim();
+            if (val) {
+                localStorage.setItem('gemini_api_key', val);
+                if (document.getElementById('inputApiKey')) document.getElementById('inputApiKey').value = val;
+                checkApiKeyUI();
+                alert('API Key de Gemini guardada correctamente.');
+            }
+        }
+
+        function checkApiKeyUI() {
+            const key = getStoredApiKey();
+            const banner = document.getElementById('aiKeyBanner');
+            if (banner) {
+                if (key) {
+                    banner.classList.add('hidden');
+                } else {
+                    banner.classList.remove('hidden');
+                }
+            }
+        }
+
         // Dark Mode Toggle Logic
         function toggleDarkMode() {
             const body = document.body;
@@ -885,6 +940,7 @@
             product: null,
             qty: null
         };
+
         function autoDetectColumns(headers) {
             headers.forEach(h => {
                 const clean = h.toLowerCase().trim();
@@ -944,7 +1000,6 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             initTheme();
-            // Register DataLabels Plugin for Pie/Donut charts
             if (typeof ChartDataLabels !== 'undefined') {
                 Chart.register(ChartDataLabels);
             }
@@ -986,7 +1041,6 @@
                     // Separate or assign 2026 data
                     rawData2026 = results.data.filter(row => {
                         let d = parseDateDetails(getRowValue(row, columnMapping.date));
-                        // If no year specified, default to 2026 for main sheet
                         return d.year === null || d.year === 2026;
                     });
 
@@ -1021,7 +1075,6 @@
             if (custom2025Url && custom2025Url.trim() !== '') {
                 candidateUrls.push(custom2025Url.trim());
             }
-            // Direct CSV endpoints derived from provided 2025 Google Sheet
             candidateUrls.push(DEFAULT_2025_CSV_URL);
             candidateUrls.push('https://docs.google.com/spreadsheets/d/1WFb1YC6-GaVnnRZtTaFXFGdXVevllCqDa624Le1bum0/gviz/tq?tqx=out:csv&sheet=2025');
             candidateUrls.push('https://docs.google.com/spreadsheets/d/1WFb1YC6-GaVnnRZtTaFXFGdXVevllCqDa624Le1bum0/export?format=csv');
@@ -1037,7 +1090,7 @@
             } else {
                 candidateUrls.push(mainUrl + '&gid=1');
             }
-            candidateUrls.push(mainUrl); // Fallback to same file
+            candidateUrls.push(mainUrl);
 
             function tryNextUrl(idx) {
                 if (idx >= candidateUrls.length) {
@@ -1051,10 +1104,8 @@
                     skipEmptyLines: true,
                     complete: function(res) {
                         if (res.data && res.data.length > 0) {
-                            // Validate it's not an HTML response
                             const firstRow = res.data[0];
                             if (Object.keys(firstRow).length > 1) {
-                                // Filter for 2025 rows or take all if dedicated sheet
                                 let filtered = res.data.filter(row => {
                                     let d = parseDateDetails(getRowValue(row, columnMapping.date));
                                     return d.year === 2025 || d.year === null;
@@ -1079,9 +1130,8 @@
 
         function getRowValue(row, colName) {
             if (!row || !colName) return '';
-            if (row[colName] !== undefined) return row[row[colName] !== undefined ? colName : ''];
+            if (row[colName] !== undefined) return row[colName];
             
-            // Loose matching for whitespace or casing differences
             const cleanTarget = colName.toLowerCase().replace(/\s+/g, '');
             for (let key in row) {
                 if (key.toLowerCase().replace(/\s+/g, '') === cleanTarget) {
@@ -1105,7 +1155,6 @@
                 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'
             ];
 
-            // Match month names
             for (let i = 0; i < 12; i++) {
                 if (lowerStr.includes(monthNames[i]) || lowerStr.startsWith(monthAbbrs[i])) {
                     const yearMatch = str.match(/20\d\d/);
@@ -1114,14 +1163,13 @@
                 }
             }
 
-            // Numerical date format: DD/MM/YYYY or YYYY-MM-DD
             let day, month, year;
             if (str.includes('-')) {
                 const parts = str.split('-');
-                if (parts[0].length === 4) { // YYYY-MM-DD
+                if (parts[0].length === 4) {
                     year = parseInt(parts[0], 10);
                     month = parseInt(parts[1], 10) - 1;
-                } else { // DD-MM-YYYY
+                } else {
                     month = parseInt(parts[1], 10) - 1;
                     year = parseInt(parts[2], 10);
                 }
@@ -1139,7 +1187,6 @@
                 return { year: year || null, monthIndex: month, monthName: spanishMonths[month] };
             }
 
-            // Standard JS Date
             const d = new Date(str);
             if (!isNaN(d.getTime())) {
                 const spanishMonths = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -1186,26 +1233,13 @@
             const searchText = (document.getElementById('filterSearch')?.value || '').toLowerCase().trim();
 
             filteredData2026 = rawData2026.filter(row => {
-                // Tienda Filter
-                if (selectedTienda !== 'ALL' && getRowValue(row, columnMapping.store) !== selectedTienda) {
-                    return false;
-                }
-                // Ambiente Filter
-                if (selectedAmbiente !== 'ALL' && getRowValue(row, columnMapping.env) !== selectedAmbiente) {
-                    return false;
-                }
-                // Tipo Producto Filter
-                if (selectedTipoProducto !== 'ALL' && getRowValue(row, columnMapping.productType) !== selectedTipoProducto) {
-                    return false;
-                }
-                // Mes Filter
+                if (selectedTienda !== 'ALL' && getRowValue(row, columnMapping.store) !== selectedTienda) return false;
+                if (selectedAmbiente !== 'ALL' && getRowValue(row, columnMapping.env) !== selectedAmbiente) return false;
+                if (selectedTipoProducto !== 'ALL' && getRowValue(row, columnMapping.productType) !== selectedTipoProducto) return false;
                 if (selectedMes !== 'ALL') {
                     let d = parseDateDetails(getRowValue(row, columnMapping.date));
-                    if (d.monthIndex === null || String(d.monthIndex) !== selectedMes) {
-                        return false;
-                    }
+                    if (d.monthIndex === null || String(d.monthIndex) !== selectedMes) return false;
                 }
-                // Search Text Filter
                 if (searchText !== '') {
                     const rowContent = Object.values(row).join(' ').toLowerCase();
                     if (!rowContent.includes(searchText)) return false;
@@ -1242,15 +1276,12 @@
                 const salesVal = parseNum(getRowValue(row, columnMapping.sales));
                 totalSales += salesVal;
 
-                // Sum directly from "cantidad" column
                 const qVal = parseNum(getRowValue(row, columnMapping.qty));
                 totalQty += qVal;
 
-                // Store aggregation
                 const store = getRowValue(row, columnMapping.store) || 'Sin Especificar';
                 storeTotals[store] = (storeTotals[store] || 0) + salesVal;
 
-                // Product aggregation
                 const prod = getRowValue(row, columnMapping.product) || getRowValue(row, columnMapping.productType) || 'Sin Nombre';
                 if (!productTotals[prod]) {
                     productTotals[prod] = { amount: 0, qty: 0 };
@@ -1259,7 +1290,6 @@
                 productTotals[prod].qty += qVal;
             });
 
-            // Top Store
             let topStore = '-';
             let topStoreAmt = 0;
             for (let s in storeTotals) {
@@ -1269,7 +1299,6 @@
                 }
             }
 
-            // Top Product
             let topProd = '-';
             let topProdAmt = 0;
             let topProdQty = 0;
@@ -1281,7 +1310,6 @@
                 }
             }
 
-            // Render KPI elements safely
             if (document.getElementById('kpiTotalSales')) document.getElementById('kpiTotalSales').innerText = formatCurrencyNoDecimals(totalSales);
             if (document.getElementById('kpiTotalQty')) document.getElementById('kpiTotalQty').innerText = Math.round(totalQty).toLocaleString('en-US');
             if (document.getElementById('kpiAvgQty')) document.getElementById('kpiAvgQty').innerText = 'Prom. por Venta: ' + (totalTx > 0 ? (totalQty / totalTx).toFixed(1) : 0) + ' unid.';
@@ -1317,8 +1345,6 @@
             });
 
             const allMonthLabels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-            
-            // Filter to include only months with actual data
             const activeMonthLabels = [];
             const activeMonthlySums = [];
 
@@ -1474,7 +1500,7 @@
                 });
             }
 
-            // 4. Ventas por Tipo de Producto (Gráfico de Torta con Porcentajes)
+            // 4. Ventas por Tipo de Producto (Torta con Porcentajes)
             const prodTypeMap = {};
             let totalProdTypeSales = 0;
             filteredData2026.forEach(row => {
@@ -1548,7 +1574,6 @@
                 return;
             }
 
-            // Agrupar registros por producto
             const productAgg = {};
             filteredData2026.forEach(row => {
                 const prod = getRowValue(row, columnMapping.product) || getRowValue(row, columnMapping.productType) || 'Sin Nombre';
@@ -1568,7 +1593,6 @@
                 productAgg[prod].totalQty += cant;
             });
 
-            // Ordenar de mayor a menor según Ventas + Impuestos y tomar el Top 10
             const sortedProducts = Object.values(productAgg).sort((a, b) => b.totalSales - a.totalSales);
             const top10 = sortedProducts.slice(0, 10);
 
@@ -1580,7 +1604,6 @@
 
                 const precioPromedio = item.totalQty > 0 ? (item.totalSales / item.totalQty) : 0;
 
-                // Badge de ranking
                 let rankBadge = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full font-bold text-xs bg-slate-100 text-slate-600">${index + 1}</span>`;
                 if (index === 0) rankBadge = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full font-bold text-xs bg-amber-100 text-amber-700 border border-amber-300"><i class="fa-solid fa-crown text-[10px]"></i></span>`;
                 else if (index === 1) rankBadge = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full font-bold text-xs bg-slate-200 text-slate-700">2</span>`;
@@ -1611,14 +1634,12 @@
             const textColor = isDark ? '#f8fafc' : '#475569';
             const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)';
 
-            // Read active filter constraints
             const selectedTienda = document.getElementById('filterTienda')?.value || 'ALL';
             const selectedAmbiente = document.getElementById('filterAmbiente')?.value || 'ALL';
             const selectedTipoProducto = document.getElementById('filterTipoProducto')?.value || 'ALL';
             const selectedMes = document.getElementById('filterMes')?.value || 'ALL';
             const searchText = (document.getElementById('filterSearch')?.value || '').toLowerCase().trim();
 
-            // Common filter predicate
             const passesCommonFilters = (r) => {
                 if (selectedTienda !== 'ALL' && getRowValue(r, columnMapping.store) !== selectedTienda) return false;
                 if (selectedAmbiente !== 'ALL' && getRowValue(r, columnMapping.env) !== selectedAmbiente) return false;
@@ -1633,7 +1654,6 @@
             const filtered2026Common = rawData2026.filter(passesCommonFilters);
             const filtered2025Common = rawData2025.filter(passesCommonFilters);
 
-            // Determine active months to compare
             let activeMonthIndices = [];
             let maxMonth2026 = 0;
 
@@ -1653,7 +1673,6 @@
                 }
             }
 
-            // Filter datasets strictly according to active month constraints
             const filtered2026 = filtered2026Common.filter(r => {
                 let d = parseDateDetails(getRowValue(r, columnMapping.date));
                 return d.monthIndex !== null && activeMonthIndices.includes(d.monthIndex);
@@ -1664,7 +1683,6 @@
                 return d.monthIndex !== null && activeMonthIndices.includes(d.monthIndex);
             });
 
-            // Monthly aggregations
             const monthly2026 = new Array(12).fill(0);
             const qty2026 = new Array(12).fill(0);
             filtered2026.forEach(r => {
@@ -1685,7 +1703,6 @@
                 }
             });
 
-            // Calculate Period Totals based strictly on active month selection
             let sum2026 = 0;
             let sum2025 = 0;
             let totalQty2026 = 0;
@@ -1704,7 +1721,6 @@
             const qtyDiff = totalQty2026 - totalQty2025;
             const qtyPct = totalQty2025 > 0 ? ((qtyDiff / totalQty2025) * 100) : 0;
 
-            // Update Card 1: Ventas YoY
             if (document.getElementById('yoy2026Total')) document.getElementById('yoy2026Total').innerText = formatCurrencyNoDecimals(sum2026);
             if (document.getElementById('yoy2025Total')) document.getElementById('yoy2025Total').innerText = formatCurrencyNoDecimals(sum2025);
             if (document.getElementById('yoyDiffAmount')) document.getElementById('yoyDiffAmount').innerText = (diffAmt >= 0 ? '+' : '') + formatCurrencyNoDecimals(diffAmt);
@@ -1723,7 +1739,6 @@
                 }
             }
 
-            // Update Card 2: Cantidad YoY
             if (document.getElementById('yoyQty2026')) document.getElementById('yoyQty2026').innerText = Math.round(totalQty2026).toLocaleString('en-US');
             if (document.getElementById('yoyQty2025')) document.getElementById('yoyQty2025').innerText = Math.round(totalQty2025).toLocaleString('en-US');
             if (document.getElementById('yoyQtyDiff')) document.getElementById('yoyQtyDiff').innerText = (qtyDiff >= 0 ? '+' : '') + Math.round(qtyDiff).toLocaleString('en-US');
@@ -1742,7 +1757,6 @@
                 }
             }
 
-            // Update Card 3: Producto Estrella YoY
             const yoyProdMap2026 = {};
             const yoyProdMap2025 = {};
 
@@ -1815,7 +1829,6 @@
                 }
             }
 
-            // Render YoY Monthly Chart for active selected month(s)
             const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
             const displayMonthNames = activeMonthIndices.map(i => monthNames[i]);
             const displayMonthly2026 = activeMonthIndices.map(i => monthly2026[i]);
@@ -1882,7 +1895,6 @@
                 });
             }
 
-            // Render YoY Store Chart using strictly aligned data
             const storeMap2026 = {};
             const storeMap2025 = {};
             filtered2026.forEach(r => {
@@ -1959,7 +1971,6 @@
                 });
             }
 
-            // Render YoY Product Breakdown Table (Top 10)
             const yoyTbody = document.getElementById('yoyTableBody');
             if (yoyTbody) {
                 yoyTbody.innerHTML = '';
@@ -1994,7 +2005,6 @@
 
                 const allProducts = Array.from(new Set([...Object.keys(productMap2026), ...Object.keys(productMap2025)]));
 
-                // Sort by 2026 sales descending and take Top 10
                 allProducts.sort((a, b) => {
                     const salesA = productMap2026[a] ? productMap2026[a].sales : 0;
                     const salesB = productMap2026[b] ? productMap2026[b].sales : 0;
@@ -2021,7 +2031,6 @@
 
                         const pctColor = diff > 0 ? 'text-emerald-500 font-bold' : (diff < 0 ? 'text-rose-500 font-bold' : 'text-slate-400');
 
-                        // Rank badge
                         let rankBadge = `<span class="inline-flex items-center justify-center w-5 h-5 rounded-full font-bold text-[10px] bg-slate-100 text-slate-600 mr-2">${index + 1}</span>`;
                         if (index === 0) rankBadge = `<span class="inline-flex items-center justify-center w-5 h-5 rounded-full font-bold text-[10px] bg-amber-100 text-amber-700 border border-amber-300 mr-2"><i class="fa-solid fa-crown text-[8px]"></i></span>`;
 
@@ -2067,9 +2076,11 @@
 
             const inputUrlMain = document.getElementById('inputUrlMain');
             const inputUrl2025 = document.getElementById('inputUrl2025');
+            const inputApiKey = document.getElementById('inputApiKey');
 
             if (inputUrlMain) inputUrlMain.value = localStorage.getItem('csv_url_main') || DEFAULT_CSV_URL;
             if (inputUrl2025) inputUrl2025.value = localStorage.getItem('csv_url_2025') || DEFAULT_2025_CSV_URL;
+            if (inputApiKey) inputApiKey.value = getStoredApiKey();
 
             populateModalDropdowns();
             modal.classList.remove('hidden');
@@ -2108,9 +2119,11 @@
         function saveConfigAndRefresh() {
             const inputUrlMain = document.getElementById('inputUrlMain');
             const inputUrl2025 = document.getElementById('inputUrl2025');
+            const inputApiKey = document.getElementById('inputApiKey');
 
             if (inputUrlMain) localStorage.setItem('csv_url_main', inputUrlMain.value.trim());
             if (inputUrl2025) localStorage.setItem('csv_url_2025', inputUrl2025.value.trim());
+            if (inputApiKey) localStorage.setItem('gemini_api_key', inputApiKey.value.trim());
 
             const mapSales = document.getElementById('mapSales');
             const mapDate = document.getElementById('mapDate');
@@ -2136,7 +2149,6 @@
             loadDashboardData();
         }
 
-        // Exponential Backoff API Fetch Helper
         async function fetchGeminiAPI(url, payload, maxRetries = 3) {
             let delay = 1000;
             for (let i = 0; i < maxRetries; i++) {
@@ -2147,7 +2159,13 @@
                         body: JSON.stringify(payload)
                     });
                     if (response.ok) return await response.json();
+                    
+                    const errData = await response.json().catch(() => ({}));
+                    if (response.status === 400 || response.status === 403) {
+                        throw new Error(errData?.error?.message || 'Clave de API inválida o sin permisos.');
+                    }
                 } catch (err) {
+                    if (err.message.includes('API') || err.message.includes('Clave')) throw err;
                     console.debug(`Intento ${i+1} de la API falló, reintentando...`, err);
                 }
                 await new Promise(res => setTimeout(res, delay));
@@ -2156,8 +2174,8 @@
             throw new Error('No se pudo establecer comunicación con la API de Gemini después de varios reintentos.');
         }
 
-        // Open AI Center Modal
         function openAIModal() {
+            checkApiKeyUI();
             const modal = document.getElementById('aiModal');
             if (modal) modal.classList.remove('hidden');
         }
@@ -2192,7 +2210,6 @@
             openAIModal();
             switchAITab('banner');
             
-            // Auto populate image prompt with star product
             const starProd = document.getElementById('kpiTopProduct')?.innerText || 'producto líder';
             const promptBox = document.getElementById('aiImagePrompt');
             if (promptBox && (!promptBox.value || promptBox.value.trim() === '')) {
@@ -2200,7 +2217,6 @@
             }
         }
 
-        // Helper: Summary of current metrics for LLM context
         function getDatasetSummaryContext() {
             let totalSales = 0;
             let totalQty = 0;
@@ -2230,12 +2246,21 @@
 - Registros analizados: ${filteredData2026.length}`;
         }
 
-        // 1. Generate Executive Diagnostic Report (Gemini 3 Flash)
         let lastGeneratedText = "";
         async function generateAIDiagnostic() {
+            const apiKey = getStoredApiKey();
             const loader = document.getElementById('aiDiagLoader');
             const content = document.getElementById('aiDiagContent');
             const btnTTS = document.getElementById('btnTTS');
+
+            if (!apiKey) {
+                openAIModal();
+                if (content) {
+                    content.innerText = "⚠️ Debes ingresar tu Gemini API Key en el recuadro superior o en Configuración (⚙️) para utilizar la IA.";
+                    content.classList.remove('hidden');
+                }
+                return;
+            }
 
             if (loader) loader.classList.remove('hidden');
             if (content) content.classList.add('hidden');
@@ -2245,7 +2270,6 @@
             const systemPrompt = "Actúa como un Director Comercial y Analista de Inteligencia de Negocios senior. Proporciona un diagnóstico ejecutivo claro, estructurado, conciso y en tono profesional en español.";
             const userPrompt = `Analiza los siguientes datos actuales de ventas e imparte un informe comercial ejecutivo:\n\n${contextData}\n\nEstructura tu respuesta en:\n1. 📊 Diagnóstico General\n2. 🌟 Fortalezas Clave\n3. ⚠️ Riesgos o Áreas de Mejora\n4. 🚀 3 Recomendaciones Estratégicas concretas.`;
 
-            const apiKey = "";
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
 
             const payload = {
@@ -2273,22 +2297,27 @@
             }
         }
 
-        // 2. Chat with AI about Sales
         async function sendAIChatQuery() {
+            const apiKey = getStoredApiKey();
             const input = document.getElementById('aiChatInput');
             const chatBox = document.getElementById('aiChatBox');
+
+            if (!apiKey) {
+                openAIModal();
+                alert('Ingresa tu Gemini API Key para chatear con la IA.');
+                return;
+            }
+
             if (!input || !input.value.trim() || !chatBox) return;
 
             const query = input.value.trim();
             input.value = '';
 
-            // User Message Bubble
             const userBubble = document.createElement('div');
             userBubble.className = 'bg-indigo-600 text-white rounded-xl p-3 self-end text-right ml-8 shadow-sm';
             userBubble.innerText = query;
             chatBox.appendChild(userBubble);
 
-            // Bot Thinking Bubble
             const botBubble = document.createElement('div');
             botBubble.className = 'bg-slate-100 border border-slate-200 text-slate-800 rounded-xl p-3 mr-8 shadow-sm animate-pulse';
             botBubble.innerText = 'Pensando...';
@@ -2299,7 +2328,6 @@
             const systemPrompt = "Eres el Asistente de Inteligencia de Negocios de la empresa. Responde de forma amable, precisa y ejecutiva utilizando los datos proporcionados.";
             const userPrompt = `Contexto del Dashboard:\n${contextData}\n\nPregunta del Usuario: ${query}`;
 
-            const apiKey = "";
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
 
             const payload = {
@@ -2321,13 +2349,18 @@
             }
         }
 
-        // 3. Generate Banner Image (Imagen 4.0)
         async function generateAIBannerImage() {
+            const apiKey = getStoredApiKey();
             const promptInput = document.getElementById('aiImagePrompt');
             const loader = document.getElementById('aiImageLoader');
             const resultBox = document.getElementById('aiImageResult');
             const imgElem = document.getElementById('aiGeneratedImg');
             const downloadBtn = document.getElementById('aiDownloadImgLink');
+
+            if (!apiKey) {
+                alert('Ingresa tu Gemini API Key para generar imágenes.');
+                return;
+            }
 
             if (!promptInput || !promptInput.value.trim()) return;
 
@@ -2335,7 +2368,6 @@
             if (resultBox) resultBox.classList.add('hidden');
 
             const promptText = promptInput.value.trim();
-            const apiKey = "";
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`;
 
             const payload = {
@@ -2361,12 +2393,18 @@
             }
         }
 
-        // 4. Generate Product Pitch Strategy Modal (Gemini 3 Flash)
         async function generateProductPitch(productName, salesAmount, qty) {
+            const apiKey = getStoredApiKey();
             const modal = document.getElementById('pitchModal');
             const modalTitle = document.getElementById('pitchModalTitle');
             const loader = document.getElementById('pitchLoader');
             const content = document.getElementById('pitchContent');
+
+            if (!apiKey) {
+                openAIModal();
+                alert('Ingresa tu Gemini API Key para generar estrategias de venta.');
+                return;
+            }
 
             if (modalTitle) modalTitle.innerText = `Estrategia IA: ${productName}`;
             if (modal) modal.classList.remove('hidden');
@@ -2385,7 +2423,6 @@ Genera:
 3. 📱 Estrategia de Redes Sociales (Copy sugerido e idea visual)
 4. 💡 Oferta o Gancho Promocional recomendado.`;
 
-            const apiKey = "";
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
 
             const payload = {
@@ -2415,7 +2452,6 @@ Genera:
             if (modal) modal.classList.add('hidden');
         }
 
-        // 5. Audio Synthesis TTS (gemini-2.5-flash-preview-tts)
         function pcmToWav(pcm16, sampleRate = 24000) {
             const buffer = new ArrayBuffer(44 + pcm16.length * 2);
             const view = new DataView(buffer);
@@ -2442,7 +2478,8 @@ Genera:
         }
 
         async function playAIAudioSummary() {
-            if (!lastGeneratedText) return;
+            const apiKey = getStoredApiKey();
+            if (!lastGeneratedText || !apiKey) return;
 
             const btnTTS = document.getElementById('btnTTS');
             const origHTML = btnTTS ? btnTTS.innerHTML : '';
@@ -2450,7 +2487,6 @@ Genera:
 
             const cleanText = "Resumen de ventas: " + lastGeneratedText.replace(/[*#]/g, '').slice(0, 300);
 
-            const apiKey = "";
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
 
             const payload = {
