@@ -90,8 +90,7 @@
             color: #94a3b8 !important;
         }
         body.dark-mode select, 
-        body.dark-mode input,
-        body.dark-mode textarea {
+        body.dark-mode input {
             background-color: #0f172a !important;
             border-color: #334155 !important;
             color: #f8fafc !important;
@@ -123,8 +122,7 @@
             background-color: #334155 !important;
         }
         body.dark-mode #configModal .bg-white,
-        body.dark-mode #aiModal .bg-white,
-        body.dark-mode #pitchModal .bg-white {
+        body.dark-mode #aiModal .bg-white {
             background-color: #1e293b !important;
             color: #f8fafc !important;
         }
@@ -132,7 +130,6 @@
 </head>
 <body class="bg-slate-50 min-h-screen text-slate-800 pb-12">
 
-    <!-- Header Navbar -->
     <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
@@ -148,7 +145,7 @@
                 </div>
 
                 <!-- Navigation Tabs & Actions -->
-                <div class="flex items-center space-x-2 sm:space-x-4">
+                <div class="flex items-center space-x-2 sm:space-x-3">
                     <!-- Navigation Tabs -->
                     <nav class="flex bg-slate-100 p-1 rounded-xl space-x-1 border border-slate-200/80">
                         <button id="tabMainBtn" onclick="switchTab('main')" class="px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all duration-200 bg-white text-indigo-600 shadow-sm">
@@ -158,6 +155,12 @@
                             <i class="fa-solid fa-code-compare mr-1.5"></i>Comparativo YoY
                         </button>
                     </nav>
+
+                    <!-- AI Assistant Button -->
+                    <button onclick="openAiModal()" title="Asistente de Inteligencia Artificial Gemini" class="px-3 py-1.5 sm:px-3.5 sm:py-2 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white text-xs sm:text-sm font-medium rounded-xl transition shadow-sm flex items-center space-x-1.5">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span class="hidden md:inline font-semibold">Asistente IA</span>
+                    </button>
 
                     <!-- Refresh Button -->
                     <button onclick="refreshData()" title="Sincronizar Datos" class="p-2 sm:px-3 sm:py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-medium rounded-xl transition border border-slate-200 flex items-center space-x-1.5">
@@ -174,18 +177,11 @@
                     <button onclick="openConfigModal()" title="Configuración de Columnas y API Key" class="p-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition border border-slate-200">
                         <i class="fa-solid fa-gear text-slate-600"></i>
                     </button>
-
-                    <!-- AI Assistant Button -->
-                    <button onclick="openAIModal()" title="Asistente IA de Ventas" class="px-3 py-2 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:to-pink-700 text-white text-xs sm:text-sm font-semibold rounded-xl shadow-md hover:shadow-indigo-500/25 transition flex items-center space-x-1.5">
-                        <i class="fa-solid fa-wand-magic-sparkles text-amber-300 animate-pulse"></i>
-                        <span class="hidden sm:inline">Asistente IA</span>
-                    </button>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Main Content Container -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
 
         <!-- Status Indicator Bar -->
@@ -267,33 +263,6 @@
             </div>
         </section>
 
-        <!-- AI Quick Action Banner -->
-        <section class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 text-white rounded-2xl p-4 sm:p-5 custom-shadow mb-6 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-4 border border-indigo-700/40">
-            <div class="flex items-center space-x-3.5 z-10">
-                <div class="w-11 h-11 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/20 text-amber-300 text-xl shrink-0">
-                    <i class="fa-solid fa-brain"></i>
-                </div>
-                <div>
-                    <div class="flex items-center space-x-2">
-                        <h3 class="font-bold text-sm sm:text-base tracking-wide">Inteligencia de Ventas Gemini IA</h3>
-                        <span class="bg-amber-400/20 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-300/30 uppercase tracking-wider">Gemini 3 Flash</span>
-                    </div>
-                    <p class="text-xs text-indigo-200 mt-0.5">Analiza tus métricas en vivo, detecta tendencias clave y genera contenido promocional automáticamente.</p>
-                </div>
-            </div>
-            <div class="flex items-center space-x-2.5 w-full md:w-auto justify-end z-10 shrink-0">
-                <button onclick="runQuickAIDiagnostic()" class="px-3.5 py-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs font-semibold rounded-xl transition flex items-center space-x-1.5 backdrop-blur-sm">
-                    <i class="fa-solid fa-chart-pie text-indigo-300"></i>
-                    <span>Diagnóstico IA</span>
-                </button>
-                <button onclick="openAIBannerGenerator()" class="px-3.5 py-2 bg-amber-400 hover:bg-amber-300 text-slate-900 text-xs font-bold rounded-xl transition shadow-lg shadow-amber-400/20 flex items-center space-x-1.5">
-                    <i class="fa-solid fa-image"></i>
-                    <span>Crear Banner IA</span>
-                </button>
-            </div>
-        </section>
-
-        <!-- VIEW 1: MAIN DASHBOARD (2026) -->
         <div id="viewMain" class="space-y-6">
             
             <!-- KPI Cards Grid -->
@@ -302,7 +271,7 @@
                 <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100 flex items-center justify-between hover:border-indigo-100 transition">
                     <div>
                         <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Ventas + Impuestos</p>
-                        <h3 id="kpiTotalSales" class="text-2xl font-bold text-slate-900 mt-1">$0.00</h3>
+                        <h3 id="kpiTotalSales" class="text-2xl font-bold text-slate-900 mt-1">$0</h3>
                         <p class="text-xs text-indigo-600 font-medium mt-1">
                             <i class="fa-solid fa-receipt mr-1"></i>Sumatoria Total 2026
                         </p>
@@ -312,12 +281,12 @@
                     </div>
                 </div>
 
-                <!-- KPI 2: Cantidad de Productos -->
+                <!-- KPI 2: Cantidad de Productos (Sumatoria de columna "Cantidad") -->
                 <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100 flex items-center justify-between hover:border-blue-100 transition">
                     <div>
                         <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Cantidad de Productos</p>
                         <h3 id="kpiTotalQty" class="text-2xl font-bold text-slate-900 mt-1">0</h3>
-                        <p id="kpiAvgQty" class="text-xs text-blue-600 font-medium mt-1">Prom. por Venta: 0 unid.</p>
+                        <p id="kpiAvgQty" class="text-xs text-blue-600 font-medium mt-1">Suma de Columna Cantidad</p>
                     </div>
                     <div class="p-3.5 bg-blue-50 text-blue-600 rounded-2xl">
                         <i class="fa-solid fa-boxes-stacked text-xl"></i>
@@ -329,7 +298,7 @@
                     <div>
                         <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tienda Líder</p>
                         <h3 id="kpiTopStore" class="text-lg font-bold text-slate-900 mt-1 truncate max-w-[160px]">-</h3>
-                        <p id="kpiTopStoreAmount" class="text-xs text-emerald-600 font-medium mt-1">$0.00 en ventas</p>
+                        <p id="kpiTopStoreAmount" class="text-xs text-emerald-600 font-medium mt-1">$0 en ventas</p>
                     </div>
                     <div class="p-3.5 bg-emerald-50 text-emerald-600 rounded-2xl">
                         <i class="fa-solid fa-store text-xl"></i>
@@ -341,7 +310,7 @@
                     <div>
                         <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Producto Estrella</p>
                         <h3 id="kpiTopProduct" class="text-lg font-bold text-slate-900 mt-1 truncate max-w-[160px]" title="Producto más vendido">-</h3>
-                        <p id="kpiTopProductAmount" class="text-xs text-amber-600 font-medium mt-1">0 unidades / $0.00</p>
+                        <p id="kpiTopProductAmount" class="text-xs text-amber-600 font-medium mt-1">0 unid. ($0)</p>
                     </div>
                     <div class="p-3.5 bg-amber-50 text-amber-600 rounded-2xl">
                         <i class="fa-solid fa-trophy text-xl"></i>
@@ -378,13 +347,13 @@
                 </div>
             </section>
 
-            <!-- Charts Row 2: Ventas por Ambiente & Ventas por Tipo de Producto -->
+            <!-- Charts Row 2: Ventas por Ambiente (Top 10 + Otros) & Ventas por Tipo de Producto -->
             <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Chart: Ventas por Ambiente (Donut con Porcentajes) -->
+                <!-- Chart: Ventas por Ambiente (Top 10 + Otros) -->
                 <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100">
                     <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
                         <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center">
-                            <i class="fa-solid fa-layer-group text-emerald-500 mr-2"></i>Ventas por Ambiente
+                            <i class="fa-solid fa-layer-group text-emerald-500 mr-2"></i>Ventas por Ambiente (Top 10 + Otros)
                         </h3>
                         <span class="text-xs text-slate-400 font-medium">Distribución %</span>
                     </div>
@@ -393,7 +362,7 @@
                     </div>
                 </div>
 
-                <!-- Chart: Ventas por Tipo de Producto (Torta con Porcentajes) -->
+                <!-- Chart: Ventas por Tipo de Producto -->
                 <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100">
                     <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
                         <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center">
@@ -407,17 +376,17 @@
                 </div>
             </section>
 
-            <!-- Detailed Data Table (Top 10) -->
+            <!-- Top 10 Best Sellers Table -->
             <section class="bg-white rounded-2xl custom-shadow border border-slate-100 overflow-hidden">
                 <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
                         <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center">
-                            <i class="fa-solid fa-ranking-star text-indigo-500 mr-2"></i>Top 10 Productos Más Vendidos (2026)
+                            <i class="fa-solid fa-trophy text-amber-500 mr-2"></i>Top 10 Productos Más Vendidos (2026)
                         </h3>
-                        <p class="text-xs text-slate-400 mt-0.5">Ranking de los 10 productos con mayor volumen de ventas filtrados</p>
+                        <p class="text-xs text-slate-400 mt-0.5">Ranking de artículos ordenados por volumen de ventas</p>
                     </div>
-                    <span id="recordCountBadge" class="self-start sm:self-auto px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-full border border-slate-200">
-                        Top 10
+                    <span id="recordCountBadge" class="self-start sm:self-auto px-3 py-1 bg-amber-50 text-amber-700 text-xs font-bold rounded-full border border-amber-200">
+                        Top 10 Líderes
                     </span>
                 </div>
                 <div class="overflow-x-auto max-h-96">
@@ -430,18 +399,16 @@
                                 <th class="p-3 sm:p-4 text-right">Cantidad Vendida</th>
                                 <th class="p-3 sm:p-4 text-right">Precio Prom. Unitario</th>
                                 <th class="p-3 sm:p-4 text-right">Venta + Impuestos Total</th>
-                                <th class="p-3 sm:p-4 text-center">Estrategia IA</th>
                             </tr>
                         </thead>
                         <tbody id="salesTableBody" class="divide-y divide-slate-100 text-slate-700">
-                            <!-- Dynamic rows rendered here -->
+                            <!-- Dynamic Top 10 rows rendered here -->
                         </tbody>
                     </table>
                 </div>
             </section>
         </div>
 
-        <!-- VIEW 2: COMPARATIVO VS AÑO ANTERIOR (YoY) -->
         <div id="viewYoY" class="hidden space-y-6 animate-fade-in">
 
             <!-- YoY Metrics Cards -->
@@ -472,7 +439,7 @@
                     </div>
                 </div>
 
-                <!-- Tarjeta 2: Cantidad de Productos YoY -->
+                <!-- Tarjeta 2: Cantidad de Productos YoY (Sumatoria de columna "Cantidad") -->
                 <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100 flex flex-col justify-between">
                     <div>
                         <div class="flex items-center justify-between">
@@ -560,18 +527,19 @@
                 </div>
             </section>
 
-            <!-- Table: Top 10 YoY Product Breakdown -->
+            <!-- Table: Top 10 Products YoY Comparison -->
             <section class="bg-white rounded-2xl custom-shadow border border-slate-100 overflow-hidden">
                 <div class="p-5 border-b border-slate-100">
                     <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center">
-                        <i class="fa-solid fa-boxes-stacked text-indigo-500 mr-2"></i>Comparativo de Ventas por Producto (Top 10)
+                        <i class="fa-solid fa-trophy text-amber-500 mr-2"></i>Top 10 Comparativo de Ventas por Producto
                     </h3>
-                    <p class="text-xs text-slate-400 mt-0.5">Rendimiento y variación de ventas por producto en el período equivalente</p>
+                    <p class="text-xs text-slate-400 mt-0.5">Rendimiento comparativo de los 10 productos más vendidos en el período equivalente</p>
                 </div>
                 <div class="overflow-x-auto max-h-96">
                     <table class="w-full text-left border-collapse text-xs sm:text-sm">
                         <thead class="bg-slate-50 sticky top-0 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider">
                             <tr>
+                                <th class="p-3 sm:p-4 text-center">Posición</th>
                                 <th class="p-3 sm:p-4">Producto</th>
                                 <th class="p-3 sm:p-4">Tipo de Producto</th>
                                 <th class="p-3 sm:p-4 text-right">Ventas 2026</th>
@@ -582,7 +550,7 @@
                             </tr>
                         </thead>
                         <tbody id="yoyTableBody" class="divide-y divide-slate-100 text-slate-700">
-                            <!-- Dynamic YoY breakdown rows -->
+                            <!-- Dynamic Top 10 YoY breakdown rows -->
                         </tbody>
                     </table>
                 </div>
@@ -591,7 +559,6 @@
 
     </main>
 
-    <!-- Configuration Modal -->
     <div id="configModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 space-y-5 animate-fade-in">
             <div class="flex justify-between items-center pb-3 border-b border-slate-100">
@@ -605,23 +572,19 @@
             </div>
 
             <div class="space-y-4 text-xs sm:text-sm">
-                <!-- Gemini API Key Input Field -->
-                <div class="bg-indigo-50/70 p-3.5 rounded-xl border border-indigo-200">
-                    <label class="block font-bold text-indigo-950 mb-1 flex items-center justify-between">
-                        <span class="flex items-center"><i class="fa-solid fa-key text-amber-500 mr-1.5"></i>Google Gemini API Key</span>
-                        <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-[11px] text-indigo-600 hover:underline font-semibold flex items-center">
-                            <span>Obtener Gratis</span>
-                            <i class="fa-solid fa-up-right-from-square ml-1 text-[9px]"></i>
-                        </a>
+                <!-- Google Gemini API Key Input -->
+                <div class="p-3 bg-indigo-50/70 border border-indigo-100 rounded-xl">
+                    <label class="block font-bold text-indigo-900 mb-1 flex items-center justify-between">
+                        <span><i class="fa-solid fa-key text-indigo-600 mr-1.5"></i>Google Gemini API Key</span>
+                        <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-[11px] font-semibold text-indigo-600 hover:underline">Obtener Clave Gratis <i class="fa-solid fa-arrow-up-right-from-square ml-0.5"></i></a>
                     </label>
-                    <input type="password" id="inputApiKey" class="w-full bg-white border border-indigo-200 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="AIzaSy...">
-                    <p class="text-[11px] text-indigo-700 mt-1">Requerida para el Diagnóstico IA, Generación de Banners y Chat de Ventas.</p>
+                    <input type="password" id="inputApiKeyModal" class="w-full bg-white border border-indigo-200 text-slate-800 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="Pega tu API key de Google Gemini aquí (AIzaSy...)">
                 </div>
 
                 <!-- Main CSV URL Input -->
                 <div>
                     <label class="block font-semibold text-slate-700 mb-1">URL CSV de Google Sheets (Principal 2026)</label>
-                    <input type="text" id="inputUrlMain" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-xs" placeholder="https://docs.google.com/spreadsheets/.../pub?output=csv">
+                    <input type="text" id="inputUrlMain" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="https://docs.google.com/spreadsheets/.../pub?output=csv">
                 </div>
 
                 <!-- 2025 CSV URL Input (Hidden) -->
@@ -671,171 +634,50 @@
         </div>
     </div>
 
-    <!-- AI Interactive Modal -->
-    <div id="aiModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4">
-        <div class="bg-white rounded-2xl max-w-3xl w-full p-5 sm:p-6 shadow-2xl border border-slate-100 flex flex-col max-h-[90vh] animate-fade-in overflow-hidden">
-            
-            <!-- Modal Header -->
-            <div class="flex justify-between items-center pb-4 border-b border-slate-100 shrink-0">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center shadow-md">
-                        <i class="fa-solid fa-wand-magic-sparkles text-amber-300 text-lg"></i>
+    <div id="aiModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 space-y-4 animate-fade-in flex flex-col max-h-[90vh]">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                <div class="flex items-center space-x-2">
+                    <div class="p-2 bg-indigo-100 text-indigo-600 rounded-xl">
+                        <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-slate-900 text-base sm:text-lg">Centro de Inteligencia Gemini IA</h3>
-                        <p class="text-xs text-slate-500">Análisis avanzado, preguntas en lenguaje natural e imágenes con IA</p>
+                        <h3 class="font-bold text-slate-800 text-base leading-tight">Centro de Inteligencia Gemini IA</h3>
+                        <p class="text-xs text-slate-500 font-medium">Análisis avanzado y sugerencias estratégicas con Inteligencia Artificial</p>
                     </div>
                 </div>
-                <button onclick="closeAIModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition">
+                <button onclick="closeAiModal()" class="text-slate-400 hover:text-slate-600">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
 
-            <!-- API Key Inline Setup Banner -->
-            <div id="aiKeyBanner" class="bg-amber-50 border border-amber-200 p-3 rounded-xl my-3 shrink-0 flex flex-col sm:flex-row items-center justify-between gap-2">
-                <div class="flex items-center space-x-2 text-xs text-amber-900">
-                    <i class="fa-solid fa-key text-amber-600 text-base"></i>
-                    <span>Ingresa tu <strong>Gemini API Key</strong> para habilitar las funciones IA:</span>
-                </div>
+            <!-- API Key Input inside AI Modal -->
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div class="flex items-center space-x-2 w-full sm:w-auto">
-                    <input type="password" id="aiModalApiKey" class="bg-white border border-amber-300 rounded-lg px-2.5 py-1 text-xs w-full sm:w-48 focus:outline-none focus:ring-2 focus:ring-amber-500" placeholder="AIzaSy...">
-                    <button onclick="saveApiKeyFromModal()" class="px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-lg shrink-0 transition">Guardar</button>
+                    <i class="fa-solid fa-key text-indigo-600"></i>
+                    <span class="font-semibold text-slate-700">Gemini API Key:</span>
+                </div>
+                <div class="flex items-center space-x-2 w-full sm:w-80">
+                    <input type="password" id="aiApiKeyInput" onchange="saveAiApiKey()" class="w-full bg-white border border-slate-300 rounded-lg p-1.5 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="Pega tu clave (AIzaSy...)">
+                    <button onclick="saveAiApiKey()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg text-xs transition whitespace-nowrap">Guardar</button>
                 </div>
             </div>
 
-            <!-- Modal Navigation Tabs -->
-            <div class="flex border-b border-slate-100 bg-slate-50 p-1 rounded-xl mb-4 shrink-0 space-x-1">
-                <button id="aiTabDiagBtn" onclick="switchAITab('diag')" class="flex-1 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-white text-indigo-600 shadow-sm transition flex items-center justify-center space-x-1.5">
-                    <i class="fa-solid fa-chart-line"></i>
-                    <span>Diagnóstico IA</span>
-                </button>
-                <button id="aiTabChatBtn" onclick="switchAITab('chat')" class="flex-1 py-2 text-xs sm:text-sm font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center justify-center space-x-1.5">
-                    <i class="fa-solid fa-comments"></i>
-                    <span>Preguntar a la IA</span>
-                </button>
-                <button id="aiTabBannerBtn" onclick="switchAITab('banner')" class="flex-1 py-2 text-xs sm:text-sm font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center justify-center space-x-1.5">
-                    <i class="fa-solid fa-paintbrush"></i>
-                    <span>Banner Imagen 4.0</span>
+            <!-- AI Action Buttons -->
+            <div class="flex space-x-2 border-b border-slate-100 pb-2">
+                <button onclick="generateAiReport()" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-xl transition flex items-center space-x-1.5">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Generar Diagnóstico Ejecutivo</span>
                 </button>
             </div>
 
-            <!-- Modal Content Area -->
-            <div class="flex-1 overflow-y-auto min-h-0 pr-1 space-y-4">
-
-                <!-- TAB 1: DIAGNÓSTICO EJECUTIVO -->
-                <div id="aiTabDiag" class="space-y-4">
-                    <div class="flex items-center justify-between bg-indigo-50/60 p-3 rounded-xl border border-indigo-100/80">
-                        <div class="text-xs text-indigo-900 font-medium flex items-center space-x-2">
-                            <i class="fa-solid fa-circle-info text-indigo-600"></i>
-                            <span>Genera un informe estratégico basado en los filtros aplicados actualmente.</span>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <button id="btnTTS" onclick="playAIAudioSummary()" class="hidden px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition flex items-center space-x-1">
-                                <i class="fa-solid fa-volume-high"></i>
-                                <span>Escuchar Audio</span>
-                            </button>
-                            <button onclick="generateAIDiagnostic()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition flex items-center space-x-1 shadow-sm">
-                                <i class="fa-solid fa-rotate mr-1"></i>
-                                <span>Generar Informe</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div id="aiDiagLoader" class="hidden py-12 text-center space-y-3">
-                        <div class="inline-block animate-spin text-indigo-600 text-3xl">
-                            <i class="fa-solid fa-circle-notch"></i>
-                        </div>
-                        <p class="text-xs text-slate-500 font-medium">Gemini 3 Flash analizando patrones de ventas y comportamiento de tiendas...</p>
-                    </div>
-
-                    <div id="aiDiagContent" class="text-xs sm:text-sm text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-200 min-h-[160px] whitespace-pre-wrap">
-                        Haz clic en "Generar Informe" para que Gemini IA analice las métricas actuales del dashboard.
-                    </div>
-                </div>
-
-                <!-- TAB 2: PREGUNTAR A LA IA (CHAT) -->
-                <div id="aiTabChat" class="hidden flex flex-col h-full space-y-3">
-                    <div id="aiChatBox" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-3 sm:p-4 overflow-y-auto space-y-3 min-h-[220px] max-h-[320px] text-xs sm:text-sm">
-                        <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-3 text-indigo-900">
-                            <strong>👋 Hola! Soy tu Asistente de Ventas Gemini.</strong>
-                            <p class="mt-1">Puedes hacerme cualquier pregunta sobre tu base de datos actual. Por ejemplo:</p>
-                            <ul class="list-disc list-inside mt-1.5 space-y-0.5 text-indigo-800">
-                                <li>¿Cuál fue la tienda con peor desempeño y qué producto debería impulsarse ahí?</li>
-                                <li>¿Qué porcentaje de ventas representa el Producto Estrella?</li>
-                                <li>Dame 3 ideas para promocionar el tipo de producto más vendido.</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center space-x-2 pt-2">
-                        <input type="text" id="aiChatInput" onkeydown="if(event.key==='Enter') sendAIChatQuery()" placeholder="Escribe tu consulta sobre las ventas aquí..." class="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                        <button onclick="sendAIChatQuery()" id="aiChatSendBtn" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-xs sm:text-sm transition flex items-center space-x-1.5">
-                            <i class="fa-solid fa-paper-plane"></i>
-                            <span class="hidden sm:inline">Enviar</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- TAB 3: GENERADOR DE BANNERS CON IMAGEN 4.0 -->
-                <div id="aiTabBanner" class="hidden space-y-4">
-                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3 text-xs sm:text-sm">
-                        <label class="block font-semibold text-slate-800">Descripción Prompt para el Arte Promocional (Imagen 4.0)</label>
-                        <textarea id="aiImagePrompt" rows="3" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="Un afiche publicitario moderno y elegante para el producto estrella..."></textarea>
-                        
-                        <div class="flex justify-between items-center pt-1">
-                            <span class="text-slate-400 text-[11px]"><i class="fa-solid fa-bolt text-amber-500 mr-1"></i>Modelo: imagen-4.0-generate-001</span>
-                            <button onclick="generateAIBannerImage()" id="btnGenerateImage" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold rounded-xl text-xs transition shadow-md flex items-center space-x-1.5">
-                                <i class="fa-solid fa-wand-magic"></i>
-                                <span>Generar Imagen IA</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div id="aiImageLoader" class="hidden py-8 text-center space-y-3">
-                        <div class="inline-block animate-spin text-amber-500 text-3xl">
-                            <i class="fa-solid fa-circle-notch"></i>
-                        </div>
-                        <p class="text-xs text-slate-500 font-medium">Imagen 4.0 renderizando el banner comercial...</p>
-                    </div>
-
-                    <div id="aiImageResult" class="hidden flex flex-col items-center justify-center space-y-3">
-                        <img id="aiGeneratedImg" src="" alt="Banner Promocional IA" class="rounded-2xl shadow-xl max-h-80 w-auto border border-slate-200 object-cover">
-                        <a id="aiDownloadImgLink" href="#" download="Banner_Promocional_IA.png" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-xl transition flex items-center space-x-1.5">
-                            <i class="fa-solid fa-download"></i>
-                            <span>Descargar Imagen Alta Calidad</span>
-                        </a>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <!-- Pitch Modal for Product Strategy -->
-    <div id="pitchModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4">
-        <div class="bg-white rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl border border-slate-100 space-y-4 animate-fade-in max-h-[85vh] flex flex-col">
-            <div class="flex justify-between items-center pb-3 border-b border-slate-100 shrink-0">
-                <div class="flex items-center space-x-2">
-                    <i class="fa-solid fa-bullhorn text-indigo-600 text-lg"></i>
-                    <h3 id="pitchModalTitle" class="font-bold text-slate-900 text-base">Estrategia Comercial IA</h3>
-                </div>
-                <button onclick="closePitchModal()" class="text-slate-400 hover:text-slate-600 p-1">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
+            <!-- AI Output Box -->
+            <div id="aiOutputBox" class="flex-1 overflow-y-auto p-4 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm leading-relaxed text-slate-700 min-h-[220px] whitespace-pre-line">
+                Selecciona una opción arriba o genera un diagnóstico ejecutivo para ver recomendaciones estratégicas en tiempo real sobre tus datos.
             </div>
 
-            <div id="pitchLoader" class="py-8 text-center space-y-2">
-                <div class="inline-block animate-spin text-indigo-600 text-2xl">
-                    <i class="fa-solid fa-circle-notch"></i>
-                </div>
-                <p class="text-xs text-slate-500 font-medium">Generando pitch de venta y estrategia de marketing con Gemini IA...</p>
-            </div>
-
-            <div id="pitchContent" class="hidden flex-1 overflow-y-auto text-xs sm:text-sm text-slate-700 space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-200 whitespace-pre-wrap">
-            </div>
-
-            <div class="flex justify-end pt-2 border-t border-slate-100 shrink-0">
-                <button onclick="closePitchModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-xs transition">Cerrar</button>
+            <div class="flex justify-end pt-2 border-t border-slate-100">
+                <button onclick="closeAiModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition">Cerrar</button>
             </div>
         </div>
     </div>
@@ -850,33 +692,6 @@
         let filteredData2026 = [];
         let currentTab = 'main';
         let columnsList = [];
-
-        // API Key Helper Functions
-        function getStoredApiKey() {
-            return localStorage.getItem('gemini_api_key') || '';
-        }
-
-        function saveApiKeyFromModal() {
-            const val = document.getElementById('aiModalApiKey')?.value.trim();
-            if (val) {
-                localStorage.setItem('gemini_api_key', val);
-                if (document.getElementById('inputApiKey')) document.getElementById('inputApiKey').value = val;
-                checkApiKeyUI();
-                alert('API Key de Gemini guardada correctamente.');
-            }
-        }
-
-        function checkApiKeyUI() {
-            const key = getStoredApiKey();
-            const banner = document.getElementById('aiKeyBanner');
-            if (banner) {
-                if (key) {
-                    banner.classList.add('hidden');
-                } else {
-                    banner.classList.remove('hidden');
-                }
-            }
-        }
 
         // Dark Mode Toggle Logic
         function toggleDarkMode() {
@@ -917,8 +732,8 @@
         let chartYoYMonthlyInst = null;
         let chartYoYStoreInst = null;
 
-        // Color Palette for charts
-        const COLOR_PALETTE = ['#4f46e5', '#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6', '#06b6d4', '#84cc16', '#64748b', '#d97706'];
+        // Color Palette for charts (Extended for up to 14 distinct segments)
+        const COLOR_PALETTE = ['#4f46e5', '#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6', '#06b6d4', '#84cc16', '#64748b', '#d97706', '#14b8a6', '#f43f5e', '#a855f7', '#6366f1'];
 
         // Currency Formatter Helper
         function formatCurrency(val, decimals = 2) {
@@ -982,42 +797,51 @@
         }
 
         function parseNum(val) {
-            if (!val) return 0;
+            if (val === null || val === undefined || val === '') return 0;
             if (typeof val === 'number') return isNaN(val) ? 0 : val;
-            let clean = String(val).replace(/[^0-9.,-]/g, '').trim();
-            if (clean.includes(',') && clean.includes('.')) {
-                if (clean.indexOf(',') < clean.indexOf('.')) {
-                    clean = clean.replace(/,/g, '');
+            
+            let str = String(val).trim();
+            // Remove currency symbols or extra letters
+            str = str.replace(/[^0-9.,-]/g, '');
+            if (!str) return 0;
+
+            // Handle Spanish thousand dots and decimal commas
+            if (str.includes('.') && str.includes(',')) {
+                if (str.indexOf('.') < str.indexOf(',')) {
+                    // Formatted like 1.500,50 -> 1500.50
+                    str = str.replace(/\./g, '').replace(',', '.');
                 } else {
-                    clean = clean.replace(/\./g, '').replace(',', '.');
+                    // Formatted like 1,500.50 -> 1500.50
+                    str = str.replace(/,/g, '');
                 }
-            } else if (clean.includes(',')) {
-                clean = clean.replace(',', '.');
+            } else if (str.includes('.')) {
+                // Determine if dot is thousand separator or decimal
+                const parts = str.split('.');
+                if (parts.length > 2) {
+                    // Multiple dots like 1.500.000 -> 1500000
+                    str = str.replace(/\./g, '');
+                } else if (parts[1] && parts[1].length === 3 && parts[0].length >= 1) {
+                    // Thousand separator like 1.500 or 2.000 -> 1500 or 2000
+                    str = str.replace('.', '');
+                }
+            } else if (str.includes(',')) {
+                str = str.replace(',', '.');
             }
-            let res = parseFloat(clean);
+
+            let res = parseFloat(str);
             return isNaN(res) ? 0 : res;
         }
 
-        // Helper function to extract and sum the exact quantity value from a row
         function getQtyVal(row) {
-            if (!row) return 0;
-            if (columnMapping.qty) {
-                let val = parseNum(getRowValue(row, columnMapping.qty));
-                if (val > 0) return val;
-            }
-            // Loose fallback matching for common quantity column headers
-            for (let key in row) {
-                const cleanKey = key.toLowerCase().trim();
-                if (cleanKey.includes('cantidad') || cleanKey.includes('cant') || cleanKey.includes('unid') || cleanKey === 'qty') {
-                    let val = parseNum(row[key]);
-                    if (val > 0) return val;
-                }
-            }
-            return 1; // Default to 1 unit per transaction if column is absent
+            if (!row || !columnMapping.qty) return 1;
+            const rawVal = getRowValue(row, columnMapping.qty);
+            const num = parseNum(rawVal);
+            return num > 0 ? num : 1;
         }
 
         window.addEventListener('DOMContentLoaded', () => {
             initTheme();
+            // Register DataLabels Plugin for Pie/Donut charts
             if (typeof ChartDataLabels !== 'undefined') {
                 Chart.register(ChartDataLabels);
             }
@@ -1029,7 +853,34 @@
             }, 60000);
         });
 
-        function loadDashboardData(isBackground = false) {
+        async function getCSVData(url) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const text = await response.text();
+                return new Promise((resolve, reject) => {
+                    Papa.parse(text, {
+                        header: true,
+                        skipEmptyLines: true,
+                        complete: res => resolve(res.data),
+                        error: err => reject(err)
+                    });
+                });
+            } catch (err) {
+                // Fallback attempt using PapaParse direct download
+                return new Promise((resolve, reject) => {
+                    Papa.parse(url, {
+                        download: true,
+                        header: true,
+                        skipEmptyLines: true,
+                        complete: res => resolve(res.data),
+                        error: parseErr => reject(parseErr)
+                    });
+                });
+            }
+        }
+
+        async function loadDashboardData(isBackground = false) {
             const mainUrl = localStorage.getItem('csv_url_main') || DEFAULT_CSV_URL;
             const refreshIcon = document.getElementById('refreshIcon');
             if (refreshIcon) refreshIcon.classList.add('fa-spin');
@@ -1041,51 +892,42 @@
                 statusText.innerText = 'Obteniendo datos de Google Sheets...';
             }
 
-            Papa.parse(mainUrl, {
-                download: true,
-                header: true,
-                skipEmptyLines: true,
-                complete: function(results) {
-                    if (refreshIcon) refreshIcon.classList.remove('fa-spin');
-                    if (!results.data || results.data.length === 0) {
-                        if (statusText) statusText.innerText = 'No se encontraron datos en el archivo CSV.';
-                        return;
-                    }
-
-                    // Extract columns
-                    columnsList = Object.keys(results.data[0] || {});
-                    autoDetectColumns(columnsList);
-
-                    // Separate or assign 2026 data
-                    rawData2026 = results.data.filter(row => {
-                        let d = parseDateDetails(getRowValue(row, columnMapping.date));
-                        return d.year === null || d.year === 2026;
-                    });
-
-                    // Update UI Filter options
-                    populateFilterDropdowns();
-                    applyFilters();
-
-                    // Update timestamp
-                    const now = new Date();
-                    const lastUpdatedText = document.getElementById('lastUpdatedText');
-                    if (lastUpdatedText) {
-                        lastUpdatedText.innerText = 'Última actualización: ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    }
-                    if (statusText) statusText.innerText = 'Datos sincronizados correctamente (' + rawData2026.length + ' registros en 2026)';
-
-                    // Load 2025 Data for YoY
-                    load2025Data();
-                },
-                error: function(err) {
-                    if (refreshIcon) refreshIcon.classList.remove('fa-spin');
-                    console.error("Error parsing CSV:", err);
-                    if (statusText) statusText.innerText = 'Error al cargar los datos CSV. Revisa la URL en configuración.';
+            try {
+                const data = await getCSVData(mainUrl);
+                if (refreshIcon) refreshIcon.classList.remove('fa-spin');
+                if (!data || data.length === 0) {
+                    if (statusText) statusText.innerText = 'No se encontraron datos en el archivo CSV.';
+                    return;
                 }
-            });
+
+                columnsList = Object.keys(data[0] || {});
+                autoDetectColumns(columnsList);
+
+                rawData2026 = data.filter(row => {
+                    let d = parseDateDetails(getRowValue(row, columnMapping.date));
+                    return d.year === null || d.year === 2026;
+                });
+
+                populateFilterDropdowns();
+                applyFilters();
+
+                const now = new Date();
+                const lastUpdatedText = document.getElementById('lastUpdatedText');
+                if (lastUpdatedText) {
+                    lastUpdatedText.innerText = 'Última actualización: ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                }
+                if (statusText) statusText.innerText = 'Datos sincronizados correctamente (' + rawData2026.length + ' registros en 2026)';
+
+                load2025Data();
+            } catch (err) {
+                if (refreshIcon) refreshIcon.classList.remove('fa-spin');
+                console.warn("Could not fetch Google Sheet, loading fallback demo data...", err);
+                if (statusText) statusText.innerText = 'Modo de demostración activo con datos de muestra.';
+                loadFallbackDemoData();
+            }
         }
 
-        function load2025Data() {
+        async function load2025Data() {
             const custom2025Url = localStorage.getItem('csv_url_2025');
             const mainUrl = localStorage.getItem('csv_url_main') || DEFAULT_CSV_URL;
 
@@ -1095,55 +937,82 @@
             }
             candidateUrls.push(DEFAULT_2025_CSV_URL);
             candidateUrls.push('https://docs.google.com/spreadsheets/d/1WFb1YC6-GaVnnRZtTaFXFGdXVevllCqDa624Le1bum0/gviz/tq?tqx=out:csv&sheet=2025');
-            candidateUrls.push('https://docs.google.com/spreadsheets/d/1WFb1YC6-GaVnnRZtTaFXFGdXVevllCqDa624Le1bum0/export?format=csv');
-            candidateUrls.push('https://docs.google.com/spreadsheets/d/1WFb1YC6-GaVnnRZtTaFXFGdXVevllCqDa624Le1bum0/export?format=csv&sheet=2025');
 
-            if (mainUrl.includes('sheet=')) {
-                candidateUrls.push(mainUrl.replace(/sheet=[^&]+/, 'sheet=2025'));
-            } else {
-                candidateUrls.push(mainUrl + '&sheet=2025');
-            }
-            if (mainUrl.includes('gid=')) {
-                candidateUrls.push(mainUrl.replace(/gid=[^&]+/, 'gid=1'));
-            } else {
-                candidateUrls.push(mainUrl + '&gid=1');
-            }
-            candidateUrls.push(mainUrl);
-
-            function tryNextUrl(idx) {
-                if (idx >= candidateUrls.length) {
-                    if (currentTab === 'yoy') updateYoYView();
-                    return;
-                }
-
-                Papa.parse(candidateUrls[idx], {
-                    download: true,
-                    header: true,
-                    skipEmptyLines: true,
-                    complete: function(res) {
-                        if (res.data && res.data.length > 0) {
-                            const firstRow = res.data[0];
-                            if (Object.keys(firstRow).length > 1) {
-                                let filtered = res.data.filter(row => {
-                                    let d = parseDateDetails(getRowValue(row, columnMapping.date));
-                                    return d.year === 2025 || d.year === null;
-                                });
-                                if (filtered.length > 0) {
-                                    rawData2025 = filtered;
-                                    if (currentTab === 'yoy') updateYoYView();
-                                    return;
-                                }
-                            }
+            for (let url of candidateUrls) {
+                try {
+                    const data = await getCSVData(url);
+                    if (data && data.length > 0 && Object.keys(data[0]).length > 1) {
+                        let filtered = data.filter(row => {
+                            let d = parseDateDetails(getRowValue(row, columnMapping.date));
+                            return d.year === 2025 || d.year === null;
+                        });
+                        if (filtered.length > 0) {
+                            rawData2025 = filtered;
+                            if (currentTab === 'yoy') updateYoYView();
+                            return;
                         }
-                        tryNextUrl(idx + 1);
-                    },
-                    error: function() {
-                        tryNextUrl(idx + 1);
                     }
+                } catch (e) {
+                    continue;
+                }
+            }
+        }
+
+        function loadFallbackDemoData() {
+            const stores = ['Sucursal Central', 'Sucursal Norte', 'Sucursal Este', 'Sucursal Oeste'];
+            const envs = ['Sala Principal', 'Terraza', 'Oficina', 'Showroom', 'Almacén', 'VIP Lounge', 'Patio', 'Jardín', 'Recepción', 'Piso 2', 'Piso 3', 'Área Exterior'];
+            const productTypes = ['Mobiliario', 'Decoración', 'Iluminación', 'Accesorios', 'Electrónica'];
+            const products = [
+                'Silla Ejecutiva Ergonomica', 'Mesa de Centro Roble', 'Lámpara LED Moderna',
+                'Sofá Cuero 3 Puestos', 'Escritorio L-Shape', 'Especiero Acero Inoxidable',
+                'Espejo Marco Dorado', 'Alfombra Persa Premium', 'Cuadro Decorativo Minimal', 'Sillón Reclinable Velvet'
+            ];
+
+            const spanishMonths = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio'];
+            rawData2026 = [];
+            rawData2025 = [];
+
+            // Populate 2026 demo data
+            for (let i = 0; i < 300; i++) {
+                const monthName = spanishMonths[i % 6];
+                rawData2026.push({
+                    'Fecha': `${monthName} 2026`,
+                    'Tienda': stores[i % stores.length],
+                    'Ambiente': envs[i % envs.length],
+                    'Tipo de Producto': productTypes[i % productTypes.length],
+                    'Producto': products[i % products.length],
+                    'Venta Neta + Impuesto': (Math.floor(Math.random() * 800) + 150).toString(),
+                    'Cantidad': (Math.floor(Math.random() * 15) + 1).toString()
                 });
             }
 
-            tryNextUrl(0);
+            // Populate 2025 demo data
+            for (let i = 0; i < 280; i++) {
+                const monthName = spanishMonths[i % 6];
+                rawData2025.push({
+                    'Fecha': `${monthName} 2025`,
+                    'Tienda': stores[i % stores.length],
+                    'Ambiente': envs[i % envs.length],
+                    'Tipo de Producto': productTypes[i % productTypes.length],
+                    'Producto': products[i % products.length],
+                    'Venta Neta + Impuesto': (Math.floor(Math.random() * 700) + 120).toString(),
+                    'Cantidad': (Math.floor(Math.random() * 12) + 1).toString()
+                });
+            }
+
+            columnsList = ['Fecha', 'Tienda', 'Ambiente', 'Tipo de Producto', 'Producto', 'Venta Neta + Impuesto', 'Cantidad'];
+            columnMapping = {
+                sales: 'Venta Neta + Impuesto',
+                date: 'Fecha',
+                store: 'Tienda',
+                env: 'Ambiente',
+                productType: 'Tipo de Producto',
+                product: 'Producto',
+                qty: 'Cantidad'
+            };
+
+            populateFilterDropdowns();
+            applyFilters();
         }
 
         function getRowValue(row, colName) {
@@ -1181,7 +1050,7 @@
                 }
             }
 
-            let day, month, year;
+            let month, year;
             if (str.includes('-')) {
                 const parts = str.split('-');
                 if (parts[0].length === 4) {
@@ -1285,7 +1154,6 @@
 
         function renderKPIs() {
             let totalSales = 0;
-            let totalTx = filteredData2026.length;
             let totalQty = 0;
             const storeTotals = {};
             const productTotals = {};
@@ -1294,7 +1162,6 @@
                 const salesVal = parseNum(getRowValue(row, columnMapping.sales));
                 totalSales += salesVal;
 
-                // Exact sum of the "Cantidad" column
                 const qVal = getQtyVal(row);
                 totalQty += qVal;
 
@@ -1331,7 +1198,6 @@
 
             if (document.getElementById('kpiTotalSales')) document.getElementById('kpiTotalSales').innerText = formatCurrencyNoDecimals(totalSales);
             if (document.getElementById('kpiTotalQty')) document.getElementById('kpiTotalQty').innerText = Math.round(totalQty).toLocaleString('en-US');
-            if (document.getElementById('kpiAvgQty')) document.getElementById('kpiAvgQty').innerText = 'Prom. por Venta: ' + (totalTx > 0 ? (totalQty / totalTx).toFixed(1) : 0) + ' unid.';
             
             if (document.getElementById('kpiTopStore')) document.getElementById('kpiTopStore').innerText = topStore;
             if (document.getElementById('kpiTopStoreAmount')) document.getElementById('kpiTopStoreAmount').innerText = formatCurrencyNoDecimals(topStoreAmt) + ' en ventas';
@@ -1351,7 +1217,7 @@
             const textColor = isDark ? '#f8fafc' : '#475569';
             const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)';
 
-            // 1. Ventas por Mes (2026)
+            // 1. Ventas por Mes
             const monthlySums = new Array(12).fill(0);
             const monthHasData = new Array(12).fill(false);
 
@@ -1459,18 +1325,34 @@
                 });
             }
 
-            // 3. Ventas por Ambiente (Donut con Porcentajes)
+            // 3. Ventas por Ambiente (Top 10 + "Otros")
             const envMap = {};
             let totalEnvSales = 0;
             filteredData2026.forEach(row => {
-                const e = getRowValue(row, columnMapping.env) || 'Otro';
+                const e = getRowValue(row, columnMapping.env) || 'Sin Especificar';
                 const amt = parseNum(getRowValue(row, columnMapping.sales));
                 envMap[e] = (envMap[e] || 0) + amt;
                 totalEnvSales += amt;
             });
 
-            const envLabels = Object.keys(envMap).map(e => {
-                const pct = totalEnvSales > 0 ? ((envMap[e] / totalEnvSales) * 100).toFixed(1) : 0;
+            const sortedEnvs = Object.keys(envMap).sort((a, b) => envMap[b] - envMap[a]);
+            const finalEnvMap = {};
+
+            if (sortedEnvs.length > 10) {
+                const top10 = sortedEnvs.slice(0, 10);
+                const rest = sortedEnvs.slice(10);
+
+                top10.forEach(e => { finalEnvMap[e] = envMap[e]; });
+                let otrosSales = 0;
+                rest.forEach(e => { otrosSales += envMap[e]; });
+
+                if (otrosSales > 0) finalEnvMap['Otros'] = otrosSales;
+            } else {
+                Object.assign(finalEnvMap, envMap);
+            }
+
+            const envLabels = Object.keys(finalEnvMap).map(e => {
+                const pct = totalEnvSales > 0 ? ((finalEnvMap[e] / totalEnvSales) * 100).toFixed(1) : 0;
                 return `${e} (${pct}%)`;
             });
 
@@ -1482,7 +1364,7 @@
                     data: {
                         labels: envLabels,
                         datasets: [{
-                            data: Object.values(envMap),
+                            data: Object.values(finalEnvMap),
                             backgroundColor: COLOR_PALETTE,
                             borderWidth: 2,
                             borderColor: isDark ? '#1e293b' : '#ffffff'
@@ -1519,7 +1401,7 @@
                 });
             }
 
-            // 4. Ventas por Tipo de Producto (Torta con Porcentajes)
+            // 4. Ventas por Tipo de Producto
             const prodTypeMap = {};
             let totalProdTypeSales = 0;
             filteredData2026.forEach(row => {
@@ -1582,67 +1464,53 @@
 
         function renderTable() {
             const tbody = document.getElementById('salesTableBody');
-            const badge = document.getElementById('recordCountBadge');
             if (!tbody) return;
 
             tbody.innerHTML = '';
 
             if (filteredData2026.length === 0) {
-                if (badge) badge.innerText = '0 Productos';
-                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-400">No hay registros para los filtros seleccionados</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400">No hay registros para los filtros seleccionados</td></tr>`;
                 return;
             }
 
-            const productAgg = {};
+            const productAggMap = {};
+
             filteredData2026.forEach(row => {
                 const prod = getRowValue(row, columnMapping.product) || getRowValue(row, columnMapping.productType) || 'Sin Nombre';
                 const pType = getRowValue(row, columnMapping.productType) || '-';
                 const monto = parseNum(getRowValue(row, columnMapping.sales));
                 const cant = getQtyVal(row);
 
-                if (!productAgg[prod]) {
-                    productAgg[prod] = {
-                        name: prod,
-                        type: pType,
-                        totalSales: 0,
-                        totalQty: 0
-                    };
+                if (!productAggMap[prod]) {
+                    productAggMap[prod] = { prodName: prod, productType: pType, totalSales: 0, totalQty: 0 };
                 }
-                productAgg[prod].totalSales += monto;
-                productAgg[prod].totalQty += cant;
+                productAggMap[prod].totalSales += monto;
+                productAggMap[prod].totalQty += cant;
             });
 
-            const sortedProducts = Object.values(productAgg).sort((a, b) => b.totalSales - a.totalSales);
-            const top10 = sortedProducts.slice(0, 10);
+            const topProductsList = Object.values(productAggMap)
+                .sort((a, b) => b.totalSales - a.totalSales)
+                .slice(0, 10);
 
-            if (badge) badge.innerText = `Top ${top10.length} de ${Object.keys(productAgg).length} Productos`;
-
-            top10.forEach((item, index) => {
+            topProductsList.forEach((item, index) => {
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-slate-50 transition';
 
-                const precioPromedio = item.totalQty > 0 ? (item.totalSales / item.totalQty) : 0;
+                const rank = index + 1;
+                let rankBadge = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-100 text-slate-700 font-bold text-xs">${rank}</span>`;
+                if (rank === 1) rankBadge = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-100 text-amber-800 font-bold text-xs">👑 1</span>`;
+                else if (rank === 2) rankBadge = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-200 text-slate-800 font-bold text-xs">🥈 2</span>`;
+                else if (rank === 3) rankBadge = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-50 text-amber-900 border border-amber-200 font-bold text-xs">🥉 3</span>`;
 
-                let rankBadge = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full font-bold text-xs bg-slate-100 text-slate-600">${index + 1}</span>`;
-                if (index === 0) rankBadge = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full font-bold text-xs bg-amber-100 text-amber-700 border border-amber-300"><i class="fa-solid fa-crown text-[10px]"></i></span>`;
-                else if (index === 1) rankBadge = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full font-bold text-xs bg-slate-200 text-slate-700">2</span>`;
-                else if (index === 2) rankBadge = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full font-bold text-xs bg-amber-700/10 text-amber-800">3</span>`;
-
-                const escapedName = item.name.replace(/'/g, "\\'");
+                const avgPrice = item.totalQty > 0 ? (item.totalSales / item.totalQty) : 0;
 
                 tr.innerHTML = `
-                    <td class="p-3 sm:p-4 text-center font-bold">${rankBadge}</td>
-                    <td class="p-3 sm:p-4 font-semibold text-slate-900">${item.name}</td>
-                    <td class="p-3 sm:p-4"><span class="px-2 py-0.5 bg-slate-100 text-slate-700 rounded-md text-xs">${item.type}</span></td>
-                    <td class="p-3 sm:p-4 text-right font-medium">${Math.round(item.totalQty).toLocaleString('en-US')}</td>
-                    <td class="p-3 sm:p-4 text-right font-medium text-slate-600">${formatCurrency(precioPromedio)}</td>
-                    <td class="p-3 sm:p-4 text-right font-bold text-slate-900">${formatCurrency(item.totalSales)}</td>
-                    <td class="p-3 sm:p-4 text-center">
-                        <button onclick="generateProductPitch('${escapedName}', ${item.totalSales}, ${item.totalQty})" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-lg border border-indigo-200 transition flex items-center space-x-1 mx-auto">
-                            <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i>
-                            <span>Pitch IA</span>
-                        </button>
-                    </td>
+                    <td class="p-3 sm:p-4 text-center">${rankBadge}</td>
+                    <td class="p-3 sm:p-4 font-bold text-slate-900">${item.prodName}</td>
+                    <td class="p-3 sm:p-4"><span class="px-2 py-0.5 bg-slate-100 text-slate-700 rounded-md text-xs">${item.productType}</span></td>
+                    <td class="p-3 sm:p-4 text-right font-medium text-slate-800">${Math.round(item.totalQty).toLocaleString('en-US')}</td>
+                    <td class="p-3 sm:p-4 text-right font-medium text-slate-600">${formatCurrency(avgPrice)}</td>
+                    <td class="p-3 sm:p-4 text-right font-bold text-indigo-600">${formatCurrency(item.totalSales)}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1659,61 +1527,60 @@
             const selectedMes = document.getElementById('filterMes')?.value || 'ALL';
             const searchText = (document.getElementById('filterSearch')?.value || '').toLowerCase().trim();
 
-            const passesCommonFilters = (r) => {
+            const filtered2026 = rawData2026.filter(r => {
                 if (selectedTienda !== 'ALL' && getRowValue(r, columnMapping.store) !== selectedTienda) return false;
                 if (selectedAmbiente !== 'ALL' && getRowValue(r, columnMapping.env) !== selectedAmbiente) return false;
                 if (selectedTipoProducto !== 'ALL' && getRowValue(r, columnMapping.productType) !== selectedTipoProducto) return false;
+                if (selectedMes !== 'ALL') {
+                    let d = parseDateDetails(getRowValue(r, columnMapping.date));
+                    if (d.monthIndex === null || String(d.monthIndex) !== selectedMes) return false;
+                }
                 if (searchText !== '') {
                     const rowContent = Object.values(r).join(' ').toLowerCase();
                     if (!rowContent.includes(searchText)) return false;
                 }
                 return true;
-            };
+            });
 
-            const filtered2026Common = rawData2026.filter(passesCommonFilters);
-            const filtered2025Common = rawData2025.filter(passesCommonFilters);
-
-            let activeMonthIndices = [];
-            let maxMonth2026 = 0;
-
-            if (selectedMes !== 'ALL') {
-                const targetM = parseInt(selectedMes, 10);
-                activeMonthIndices = [targetM];
-                maxMonth2026 = targetM;
-            } else {
-                filtered2026Common.forEach(r => {
+            const filtered2025 = rawData2025.filter(r => {
+                if (selectedTienda !== 'ALL' && getRowValue(r, columnMapping.store) !== selectedTienda) return false;
+                if (selectedAmbiente !== 'ALL' && getRowValue(r, columnMapping.env) !== selectedAmbiente) return false;
+                if (selectedTipoProducto !== 'ALL' && getRowValue(r, columnMapping.productType) !== selectedTipoProducto) return false;
+                if (selectedMes !== 'ALL') {
                     let d = parseDateDetails(getRowValue(r, columnMapping.date));
-                    if (d.monthIndex !== null && d.monthIndex >= 0 && d.monthIndex < 12) {
-                        if (d.monthIndex > maxMonth2026) maxMonth2026 = d.monthIndex;
-                    }
-                });
-                for (let i = 0; i <= maxMonth2026; i++) {
-                    activeMonthIndices.push(i);
+                    if (d.monthIndex === null || String(d.monthIndex) !== selectedMes) return false;
                 }
-            }
-
-            const filtered2026 = filtered2026Common.filter(r => {
-                let d = parseDateDetails(getRowValue(r, columnMapping.date));
-                return d.monthIndex !== null && activeMonthIndices.includes(d.monthIndex);
+                if (searchText !== '') {
+                    const rowContent = Object.values(r).join(' ').toLowerCase();
+                    if (!rowContent.includes(searchText)) return false;
+                }
+                return true;
             });
 
-            const filtered2025Aligned = filtered2025Common.filter(r => {
-                let d = parseDateDetails(getRowValue(r, columnMapping.date));
-                return d.monthIndex !== null && activeMonthIndices.includes(d.monthIndex);
-            });
-
+            let maxMonth2026 = 0;
             const monthly2026 = new Array(12).fill(0);
             const qty2026 = new Array(12).fill(0);
+
             filtered2026.forEach(r => {
                 let d = parseDateDetails(getRowValue(r, columnMapping.date));
                 if (d.monthIndex !== null && d.monthIndex >= 0 && d.monthIndex < 12) {
                     monthly2026[d.monthIndex] += parseNum(getRowValue(r, columnMapping.sales));
                     qty2026[d.monthIndex] += getQtyVal(r);
+                    if (d.monthIndex > maxMonth2026) maxMonth2026 = d.monthIndex;
                 }
             });
 
+            if (selectedMes !== 'ALL') maxMonth2026 = parseInt(selectedMes, 10);
+
             const monthly2025 = new Array(12).fill(0);
             const qty2025 = new Array(12).fill(0);
+
+            const filtered2025Aligned = filtered2025.filter(r => {
+                let d = parseDateDetails(getRowValue(r, columnMapping.date));
+                if (selectedMes !== 'ALL') return d.monthIndex === maxMonth2026;
+                return d.monthIndex !== null && d.monthIndex >= 0 && d.monthIndex <= maxMonth2026;
+            });
+
             filtered2025Aligned.forEach(r => {
                 let d = parseDateDetails(getRowValue(r, columnMapping.date));
                 if (d.monthIndex !== null && d.monthIndex >= 0 && d.monthIndex < 12) {
@@ -1727,12 +1594,13 @@
             let totalQty2026 = 0;
             let totalQty2025 = 0;
 
-            activeMonthIndices.forEach(idx => {
-                sum2026 += monthly2026[idx];
-                sum2025 += monthly2025[idx];
-                totalQty2026 += qty2026[idx];
-                totalQty2025 += qty2025[idx];
-            });
+            const startIdx = (selectedMes !== 'ALL') ? maxMonth2026 : 0;
+            for (let i = startIdx; i <= maxMonth2026; i++) {
+                sum2026 += monthly2026[i];
+                sum2025 += monthly2025[i];
+                totalQty2026 += qty2026[i];
+                totalQty2025 += qty2025[i];
+            }
 
             const diffAmt = sum2026 - sum2025;
             const pctGrowth = sum2025 > 0 ? ((diffAmt / sum2025) * 100) : 0;
@@ -1758,7 +1626,6 @@
                 }
             }
 
-            // Sum of quantity column for 2026 vs 2025
             if (document.getElementById('yoyQty2026')) document.getElementById('yoyQty2026').innerText = Math.round(totalQty2026).toLocaleString('en-US');
             if (document.getElementById('yoyQty2025')) document.getElementById('yoyQty2025').innerText = Math.round(totalQty2025).toLocaleString('en-US');
             if (document.getElementById('yoyQtyDiff')) document.getElementById('yoyQtyDiff').innerText = (qtyDiff >= 0 ? '+' : '') + Math.round(qtyDiff).toLocaleString('en-US');
@@ -1777,6 +1644,7 @@
                 }
             }
 
+            // Star Product YoY
             const yoyProdMap2026 = {};
             const yoyProdMap2025 = {};
 
@@ -1811,10 +1679,8 @@
             }
 
             let yoyTopProdSales2025 = 0;
-            let yoyTopProdQty2025 = 0;
             if (yoyTopProdName !== '-' && yoyProdMap2025[yoyTopProdName]) {
                 yoyTopProdSales2025 = yoyProdMap2025[yoyTopProdName].sales;
-                yoyTopProdQty2025 = yoyProdMap2025[yoyTopProdName].qty;
             }
 
             const yoyTopProdDiff = yoyTopProdSales2026 - yoyTopProdSales2025;
@@ -1849,10 +1715,11 @@
                 }
             }
 
+            // Render YoY Monthly Chart
             const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-            const displayMonthNames = activeMonthIndices.map(i => monthNames[i]);
-            const displayMonthly2026 = activeMonthIndices.map(i => monthly2026[i]);
-            const displayMonthly2025 = activeMonthIndices.map(i => monthly2025[i]);
+            const displayMonthNames = (selectedMes !== 'ALL') ? [monthNames[maxMonth2026]] : monthNames.slice(0, maxMonth2026 + 1);
+            const displayMonthly2026 = (selectedMes !== 'ALL') ? [monthly2026[maxMonth2026]] : monthly2026.slice(0, maxMonth2026 + 1);
+            const displayMonthly2025 = (selectedMes !== 'ALL') ? [monthly2025[maxMonth2026]] : monthly2025.slice(0, maxMonth2026 + 1);
 
             if (chartYoYMonthlyInst) chartYoYMonthlyInst.destroy();
             const ctxYoYMonthly = document.getElementById('chartYoYMonthly')?.getContext('2d');
@@ -1862,59 +1729,33 @@
                     data: {
                         labels: displayMonthNames,
                         datasets: [
-                            {
-                                label: '2026',
-                                data: displayMonthly2026,
-                                backgroundColor: '#4f46e5',
-                                borderRadius: 6
-                            },
-                            {
-                                label: '2025',
-                                data: displayMonthly2025,
-                                backgroundColor: isDark ? '#64748b' : '#cbd5e1',
-                                borderRadius: 6
-                            }
+                            { label: '2026', data: displayMonthly2026, backgroundColor: '#4f46e5', borderRadius: 6 },
+                            { label: '2025', data: displayMonthly2025, backgroundColor: isDark ? '#64748b' : '#cbd5e1', borderRadius: 6 }
                         ]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        layout: {
-                            padding: { top: 20 }
-                        },
+                        layout: { padding: { top: 20 } },
                         plugins: {
                             legend: { display: false },
                             datalabels: {
-                                display: true,
-                                anchor: 'end',
-                                align: 'top',
-                                color: textColor,
-                                font: { size: 10, weight: 'bold' },
+                                display: true, anchor: 'end', align: 'top', color: textColor, font: { size: 10, weight: 'bold' },
                                 formatter: (v) => {
                                     if (!v || v === 0) return '';
-                                    if (Math.abs(v) >= 1000) {
-                                        let num = (v / 1000).toFixed(1);
-                                        if (num.endsWith('.0')) num = num.slice(0, -2);
-                                        return '$' + num + 'k';
-                                    }
-                                    return '$' + Math.round(v);
+                                    return '$' + (Math.abs(v) >= 1000 ? (v / 1000).toFixed(1) + 'k' : Math.round(v));
                                 }
                             }
                         },
                         scales: {
-                            x: {
-                                ticks: { color: textColor },
-                                grid: { color: gridColor }
-                            },
-                            y: { 
-                                ticks: { color: textColor, callback: v => '$' + (v >= 1000 ? (v/1000).toFixed(0) + 'k' : v) },
-                                grid: { color: gridColor }
-                            }
+                            x: { ticks: { color: textColor }, grid: { color: gridColor } },
+                            y: { ticks: { color: textColor, callback: v => '$' + (v >= 1000 ? (v/1000).toFixed(0) + 'k' : v) }, grid: { color: gridColor } }
                         }
                     }
                 });
             }
 
+            // Render YoY Store Chart
             const storeMap2026 = {};
             const storeMap2025 = {};
             filtered2026.forEach(r => {
@@ -1938,59 +1779,33 @@
                     data: {
                         labels: allStores,
                         datasets: [
-                            {
-                                label: '2026',
-                                data: storeValues2026,
-                                backgroundColor: '#4f46e5',
-                                borderRadius: 6
-                            },
-                            {
-                                label: '2025',
-                                data: storeValues2025,
-                                backgroundColor: isDark ? '#64748b' : '#cbd5e1',
-                                borderRadius: 6
-                            }
+                            { label: '2026', data: storeValues2026, backgroundColor: '#4f46e5', borderRadius: 6 },
+                            { label: '2025', data: storeValues2025, backgroundColor: isDark ? '#64748b' : '#cbd5e1', borderRadius: 6 }
                         ]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        layout: {
-                            padding: { top: 20 }
-                        },
+                        layout: { padding: { top: 20 } },
                         plugins: {
                             legend: { display: false },
                             datalabels: {
-                                display: true,
-                                anchor: 'end',
-                                align: 'top',
-                                color: textColor,
-                                font: { size: 10, weight: 'bold' },
+                                display: true, anchor: 'end', align: 'top', color: textColor, font: { size: 10, weight: 'bold' },
                                 formatter: (v) => {
                                     if (!v || v === 0) return '';
-                                    if (Math.abs(v) >= 1000) {
-                                        let num = (v / 1000).toFixed(1);
-                                        if (num.endsWith('.0')) num = num.slice(0, -2);
-                                        return '$' + num + 'k';
-                                    }
-                                    return '$' + Math.round(v);
+                                    return '$' + (Math.abs(v) >= 1000 ? (v / 1000).toFixed(1) + 'k' : Math.round(v));
                                 }
                             }
                         },
                         scales: {
-                            x: {
-                                ticks: { color: textColor },
-                                grid: { color: gridColor }
-                            },
-                            y: { 
-                                ticks: { color: textColor, callback: v => '$' + (v >= 1000 ? (v/1000).toFixed(0) + 'k' : v) },
-                                grid: { color: gridColor }
-                            }
+                            x: { ticks: { color: textColor }, grid: { color: gridColor } },
+                            y: { ticks: { color: textColor, callback: v => '$' + (v >= 1000 ? (v/1000).toFixed(0) + 'k' : v) }, grid: { color: gridColor } }
                         }
                     }
                 });
             }
 
+            // Render Top 10 YoY Breakdown Table
             const yoyTbody = document.getElementById('yoyTableBody');
             if (yoyTbody) {
                 yoyTbody.innerHTML = '';
@@ -2003,11 +1818,11 @@
                     const prod = getRowValue(r, columnMapping.product) || getRowValue(r, columnMapping.productType) || 'Sin Especificar';
                     const pType = getRowValue(r, columnMapping.productType) || '-';
                     const sVal = parseNum(getRowValue(r, columnMapping.sales));
-                    const qVal = parseNum(getRowValue(r, columnMapping.qty));
+                    const qVal = getQtyVal(r);
 
                     if (!productMap2026[prod]) productMap2026[prod] = { sales: 0, qty: 0 };
                     productMap2026[prod].sales += sVal;
-                    productMap2026[prod].qty += (qVal > 0 ? qVal : 1);
+                    productMap2026[prod].qty += qVal;
                     productTypeMap[prod] = pType;
                 });
 
@@ -2015,28 +1830,22 @@
                     const prod = getRowValue(r, columnMapping.product) || getRowValue(r, columnMapping.productType) || 'Sin Especificar';
                     const pType = getRowValue(r, columnMapping.productType) || '-';
                     const sVal = parseNum(getRowValue(r, columnMapping.sales));
-                    const qVal = parseNum(getRowValue(r, columnMapping.qty));
+                    const qVal = getQtyVal(r);
 
                     if (!productMap2025[prod]) productMap2025[prod] = { sales: 0, qty: 0 };
                     productMap2025[prod].sales += sVal;
-                    productMap2025[prod].qty += (qVal > 0 ? qVal : 1);
+                    productMap2025[prod].qty += qVal;
                     if (!productTypeMap[prod]) productTypeMap[prod] = pType;
                 });
 
-                const allProducts = Array.from(new Set([...Object.keys(productMap2026), ...Object.keys(productMap2025)]));
+                const topYoYProducts = Object.keys(productMap2026)
+                    .sort((a, b) => productMap2026[b].sales - productMap2026[a].sales)
+                    .slice(0, 10);
 
-                allProducts.sort((a, b) => {
-                    const salesA = productMap2026[a] ? productMap2026[a].sales : 0;
-                    const salesB = productMap2026[b] ? productMap2026[b].sales : 0;
-                    return salesB - salesA;
-                });
-
-                const top10YoY = allProducts.slice(0, 10);
-
-                if (top10YoY.length === 0) {
-                    yoyTbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-400">No hay datos de productos para mostrar</td></tr>`;
+                if (topYoYProducts.length === 0) {
+                    yoyTbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400">No hay datos de productos para mostrar</td></tr>`;
                 } else {
-                    top10YoY.forEach((prodName, index) => {
+                    topYoYProducts.forEach((prodName, idx) => {
                         const val26 = productMap2026[prodName] ? productMap2026[prodName].sales : 0;
                         const qty26 = productMap2026[prodName] ? productMap2026[prodName].qty : 0;
                         const val25 = productMap2025[prodName] ? productMap2025[prodName].sales : 0;
@@ -2049,13 +1858,17 @@
                         const tr = document.createElement('tr');
                         tr.className = 'hover:bg-slate-50 transition';
 
+                        const rank = idx + 1;
+                        let rankBadge = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-100 text-slate-700 font-bold text-xs">${rank}</span>`;
+                        if (rank === 1) rankBadge = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-100 text-amber-800 font-bold text-xs">👑 1</span>`;
+                        else if (rank === 2) rankBadge = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-200 text-slate-800 font-bold text-xs">🥈 2</span>`;
+                        else if (rank === 3) rankBadge = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-50 text-amber-900 border border-amber-200 font-bold text-xs">🥉 3</span>`;
+
                         const pctColor = diff > 0 ? 'text-emerald-500 font-bold' : (diff < 0 ? 'text-rose-500 font-bold' : 'text-slate-400');
 
-                        let rankBadge = `<span class="inline-flex items-center justify-center w-5 h-5 rounded-full font-bold text-[10px] bg-slate-100 text-slate-600 mr-2">${index + 1}</span>`;
-                        if (index === 0) rankBadge = `<span class="inline-flex items-center justify-center w-5 h-5 rounded-full font-bold text-[10px] bg-amber-100 text-amber-700 border border-amber-300 mr-2"><i class="fa-solid fa-crown text-[8px]"></i></span>`;
-
                         tr.innerHTML = `
-                            <td class="p-3 sm:p-4 font-semibold text-slate-900 flex items-center">${rankBadge}${prodName}</td>
+                            <td class="p-3 sm:p-4 text-center">${rankBadge}</td>
+                            <td class="p-3 sm:p-4 font-bold text-slate-900">${prodName}</td>
                             <td class="p-3 sm:p-4"><span class="px-2 py-0.5 bg-slate-100 text-slate-700 rounded-md text-xs">${prodType}</span></td>
                             <td class="p-3 sm:p-4 text-right font-medium">${formatCurrency(val26)}</td>
                             <td class="p-3 sm:p-4 text-right text-slate-500">${formatCurrency(val25)}</td>
@@ -2094,13 +1907,11 @@
             const modal = document.getElementById('configModal');
             if (!modal) return;
 
+            const inputApiKeyModal = document.getElementById('inputApiKeyModal');
             const inputUrlMain = document.getElementById('inputUrlMain');
-            const inputUrl2025 = document.getElementById('inputUrl2025');
-            const inputApiKey = document.getElementById('inputApiKey');
 
+            if (inputApiKeyModal) inputApiKeyModal.value = localStorage.getItem('gemini_api_key') || '';
             if (inputUrlMain) inputUrlMain.value = localStorage.getItem('csv_url_main') || DEFAULT_CSV_URL;
-            if (inputUrl2025) inputUrl2025.value = localStorage.getItem('csv_url_2025') || DEFAULT_2025_CSV_URL;
-            if (inputApiKey) inputApiKey.value = getStoredApiKey();
 
             populateModalDropdowns();
             modal.classList.remove('hidden');
@@ -2137,13 +1948,11 @@
         }
 
         function saveConfigAndRefresh() {
+            const inputApiKeyModal = document.getElementById('inputApiKeyModal');
             const inputUrlMain = document.getElementById('inputUrlMain');
-            const inputUrl2025 = document.getElementById('inputUrl2025');
-            const inputApiKey = document.getElementById('inputApiKey');
 
+            if (inputApiKeyModal) localStorage.setItem('gemini_api_key', inputApiKeyModal.value.trim());
             if (inputUrlMain) localStorage.setItem('csv_url_main', inputUrlMain.value.trim());
-            if (inputUrl2025) localStorage.setItem('csv_url_2025', inputUrl2025.value.trim());
-            if (inputApiKey) localStorage.setItem('gemini_api_key', inputApiKey.value.trim());
 
             const mapSales = document.getElementById('mapSales');
             const mapDate = document.getElementById('mapDate');
@@ -2169,381 +1978,82 @@
             loadDashboardData();
         }
 
-        async function fetchGeminiAPI(url, payload, maxRetries = 3) {
-            let delay = 1000;
-            for (let i = 0; i < maxRetries; i++) {
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    if (response.ok) return await response.json();
-                    
-                    const errData = await response.json().catch(() => ({}));
-                    if (response.status === 400 || response.status === 403) {
-                        throw new Error(errData?.error?.message || 'Clave de API inválida o sin permisos.');
-                    }
-                } catch (err) {
-                    if (err.message.includes('API') || err.message.includes('Clave')) throw err;
-                    console.debug(`Intento ${i+1} de la API falló, reintentando...`, err);
-                }
-                await new Promise(res => setTimeout(res, delay));
-                delay *= 2;
-            }
-            throw new Error('No se pudo establecer comunicación con la API de Gemini después de varios reintentos.');
-        }
-
-        function openAIModal() {
-            checkApiKeyUI();
+        function openAiModal() {
             const modal = document.getElementById('aiModal');
-            if (modal) modal.classList.remove('hidden');
+            if (!modal) return;
+            
+            const aiApiKeyInput = document.getElementById('aiApiKeyInput');
+            if (aiApiKeyInput) {
+                aiApiKeyInput.value = localStorage.getItem('gemini_api_key') || '';
+            }
+            modal.classList.remove('hidden');
         }
 
-        function closeAIModal() {
+        function closeAiModal() {
             const modal = document.getElementById('aiModal');
             if (modal) modal.classList.add('hidden');
         }
 
-        function switchAITab(tab) {
-            const tabs = ['diag', 'chat', 'banner'];
-            tabs.forEach(t => {
-                const content = document.getElementById(`aiTab${t.charAt(0).toUpperCase() + t.slice(1)}`);
-                const btn = document.getElementById(`aiTab${t.charAt(0).toUpperCase() + t.slice(1)}Btn`);
-                if (t === tab) {
-                    if (content) content.classList.remove('hidden');
-                    if (btn) btn.className = 'flex-1 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-white text-indigo-600 shadow-sm transition flex items-center justify-center space-x-1.5';
-                } else {
-                    if (content) content.classList.add('hidden');
-                    if (btn) btn.className = 'flex-1 py-2 text-xs sm:text-sm font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center justify-center space-x-1.5';
-                }
-            });
-        }
-
-        function runQuickAIDiagnostic() {
-            openAIModal();
-            switchAITab('diag');
-            generateAIDiagnostic();
-        }
-
-        function openAIBannerGenerator() {
-            openAIModal();
-            switchAITab('banner');
-            
-            const starProd = document.getElementById('kpiTopProduct')?.innerText || 'producto líder';
-            const promptBox = document.getElementById('aiImagePrompt');
-            if (promptBox && (!promptBox.value || promptBox.value.trim() === '')) {
-                promptBox.value = `Un afiche publicitario profesional, moderno y de alta calidad para promocionar "${starProd}" en una tienda elegante, iluminación cálida, estilo fotografía comercial 4K.`;
+        function saveAiApiKey() {
+            const key = document.getElementById('aiApiKeyInput')?.value.trim();
+            if (key !== undefined) {
+                localStorage.setItem('gemini_api_key', key);
+                alert('API Key guardada correctamente.');
             }
         }
 
-        function getDatasetSummaryContext() {
+        async function generateAiReport() {
+            const apiKey = localStorage.getItem('gemini_api_key');
+            const outputBox = document.getElementById('aiOutputBox');
+            if (!outputBox) return;
+
+            if (!apiKey) {
+                outputBox.innerText = '⚠️ Por favor ingresa tu API Key de Google Gemini en la casilla superior o en Configuración ⚙️ para generar el informe con Inteligencia Artificial.';
+                return;
+            }
+
+            outputBox.innerText = '🤖 Analizando datos de ventas con Google Gemini IA... Un momento por favor.';
+
             let totalSales = 0;
             let totalQty = 0;
-            const storeSales = {};
-            const prodSales = {};
-
             filteredData2026.forEach(r => {
-                const s = parseNum(getRowValue(r, columnMapping.sales));
-                const q = parseNum(getRowValue(r, columnMapping.qty));
-                const store = getRowValue(r, columnMapping.store) || 'General';
-                const prod = getRowValue(r, columnMapping.product) || getRowValue(r, columnMapping.productType) || 'Producto';
-
-                totalSales += s;
-                totalQty += q;
-                storeSales[store] = (storeSales[store] || 0) + s;
-                prodSales[prod] = (prodSales[prod] || 0) + s;
+                totalSales += parseNum(getRowValue(r, columnMapping.sales));
+                totalQty += getQtyVal(r);
             });
 
-            const topStore = Object.keys(storeSales).sort((a,b) => storeSales[b] - storeSales[a])[0] || '-';
-            const topProd = Object.keys(prodSales).sort((a,b) => prodSales[b] - prodSales[a])[0] || '-';
+            const topStore = document.getElementById('kpiTopStore')?.innerText || 'N/A';
+            const topProd = document.getElementById('kpiTopProduct')?.innerText || 'N/A';
 
-            return `Métricas Actuales (2026):
-- Ventas Totales: ${formatCurrency(totalSales)}
-- Cantidad Total Vendida: ${Math.round(totalQty)} unidades
-- Tienda Líder: ${topStore} (${formatCurrency(storeSales[topStore] || 0)})
-- Producto Estrella: ${topProd} (${formatCurrency(prodSales[topProd] || 0)})
-- Registros analizados: ${filteredData2026.length}`;
-        }
+            const prompt = `Actúa como un Consultor Senior de Negocios y Analista de Datos de Ventas. Analiza los siguientes indicadores clave del período 2026:
+- Ventas Totales: $${totalSales.toLocaleString()}
+- Unidades Vendidas: ${totalQty.toLocaleString()}
+- Tienda Líder: ${topStore}
+- Producto Estrella: ${topProd}
 
-        let lastGeneratedText = "";
-        async function generateAIDiagnostic() {
-            const apiKey = getStoredApiKey();
-            const loader = document.getElementById('aiDiagLoader');
-            const content = document.getElementById('aiDiagContent');
-            const btnTTS = document.getElementById('btnTTS');
-
-            if (!apiKey) {
-                openAIModal();
-                if (content) {
-                    content.innerText = "⚠️ Debes ingresar tu Gemini API Key en el recuadro superior o en Configuración (⚙️) para utilizar la IA.";
-                    content.classList.remove('hidden');
-                }
-                return;
-            }
-
-            if (loader) loader.classList.remove('hidden');
-            if (content) content.classList.add('hidden');
-            if (btnTTS) btnTTS.classList.add('hidden');
-
-            const contextData = getDatasetSummaryContext();
-            const systemPrompt = "Actúa como un Director Comercial y Analista de Inteligencia de Negocios senior. Proporciona un diagnóstico ejecutivo claro, estructurado, conciso y en tono profesional en español.";
-            const userPrompt = `Analiza los siguientes datos actuales de ventas e imparte un informe comercial ejecutivo:\n\n${contextData}\n\nEstructura tu respuesta en:\n1. 📊 Diagnóstico General\n2. 🌟 Fortalezas Clave\n3. ⚠️ Riesgos o Áreas de Mejora\n4. 🚀 3 Recomendaciones Estratégicas concretas.`;
-
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-            const payload = {
-                contents: [{ parts: [{ text: userPrompt }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] }
-            };
+Proporciona un diagnóstico estratégico en 3 puntos claros:
+1. Resumen Ejecutivo de Rendimiento.
+2. Principales Oportunidades e Incentivos Comerciales.
+3. 2 Recomendaciones Concretas para Incrementar Ventas.`;
 
             try {
-                const result = await fetchGeminiAPI(apiUrl, payload);
-                const text = result?.candidates?.[0]?.content?.parts?.[0]?.text || "No se pudo generar el diagnóstico.";
-                
-                lastGeneratedText = text;
-                if (content) {
-                    content.innerText = text;
-                    content.classList.remove('hidden');
-                }
-                if (btnTTS) btnTTS.classList.remove('hidden');
-            } catch (err) {
-                if (content) {
-                    content.innerText = "Error al conectar con la IA de Gemini: " + err.message;
-                    content.classList.remove('hidden');
-                }
-            } finally {
-                if (loader) loader.classList.add('hidden');
-            }
-        }
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }]
+                    })
+                });
 
-        async function sendAIChatQuery() {
-            const apiKey = getStoredApiKey();
-            const input = document.getElementById('aiChatInput');
-            const chatBox = document.getElementById('aiChatBox');
-
-            if (!apiKey) {
-                openAIModal();
-                alert('Ingresa tu Gemini API Key para chatear con la IA.');
-                return;
-            }
-
-            if (!input || !input.value.trim() || !chatBox) return;
-
-            const query = input.value.trim();
-            input.value = '';
-
-            const userBubble = document.createElement('div');
-            userBubble.className = 'bg-indigo-600 text-white rounded-xl p-3 self-end text-right ml-8 shadow-sm';
-            userBubble.innerText = query;
-            chatBox.appendChild(userBubble);
-
-            const botBubble = document.createElement('div');
-            botBubble.className = 'bg-slate-100 border border-slate-200 text-slate-800 rounded-xl p-3 mr-8 shadow-sm animate-pulse';
-            botBubble.innerText = 'Pensando...';
-            chatBox.appendChild(botBubble);
-            chatBox.scrollTop = chatBox.scrollHeight;
-
-            const contextData = getDatasetSummaryContext();
-            const systemPrompt = "Eres el Asistente de Inteligencia de Negocios de la empresa. Responde de forma amable, precisa y ejecutiva utilizando los datos proporcionados.";
-            const userPrompt = `Contexto del Dashboard:\n${contextData}\n\nPregunta del Usuario: ${query}`;
-
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-            const payload = {
-                contents: [{ parts: [{ text: userPrompt }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] }
-            };
-
-            try {
-                const result = await fetchGeminiAPI(apiUrl, payload);
-                const text = result?.candidates?.[0]?.content?.parts?.[0]?.text || "No obtuve respuesta.";
-                botBubble.classList.remove('animate-pulse');
-                botBubble.innerText = text;
-            } catch (err) {
-                botBubble.classList.remove('animate-pulse');
-                botBubble.className = 'bg-rose-50 text-rose-700 border border-rose-200 rounded-xl p-3 mr-8';
-                botBubble.innerText = "Error al procesar la consulta: " + err.message;
-            } finally {
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }
-        }
-
-        async function generateAIBannerImage() {
-            const apiKey = getStoredApiKey();
-            const promptInput = document.getElementById('aiImagePrompt');
-            const loader = document.getElementById('aiImageLoader');
-            const resultBox = document.getElementById('aiImageResult');
-            const imgElem = document.getElementById('aiGeneratedImg');
-            const downloadBtn = document.getElementById('aiDownloadImgLink');
-
-            if (!apiKey) {
-                alert('Ingresa tu Gemini API Key para generar imágenes.');
-                return;
-            }
-
-            if (!promptInput || !promptInput.value.trim()) return;
-
-            if (loader) loader.classList.remove('hidden');
-            if (resultBox) resultBox.classList.add('hidden');
-
-            const promptText = promptInput.value.trim();
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`;
-
-            const payload = {
-                instances: [{ prompt: promptText }],
-                parameters: { sampleCount: 1 }
-            };
-
-            try {
-                const result = await fetchGeminiAPI(apiUrl, payload);
-                const base64Bytes = result?.predictions?.[0]?.bytesBase64Encoded;
-                if (base64Bytes) {
-                    const imgSrc = `data:image/png;base64,${base64Bytes}`;
-                    if (imgElem) imgElem.src = imgSrc;
-                    if (downloadBtn) downloadBtn.href = imgSrc;
-                    if (resultBox) resultBox.classList.remove('hidden');
+                const data = await res.json();
+                if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
+                    outputBox.innerText = data.candidates[0].content.parts[0].text;
+                } else if (data.error) {
+                    outputBox.innerText = `❌ Error de Gemini API: ${data.error.message || 'Clave inválida o sin cuota.'}`;
                 } else {
-                    alert("No se pudo generar la imagen. Intenta con otra descripción.");
+                    outputBox.innerText = 'No se pudo obtener una respuesta válida de la IA.';
                 }
             } catch (err) {
-                alert("Error al generar la imagen con Imagen 4.0: " + err.message);
-            } finally {
-                if (loader) loader.classList.add('hidden');
-            }
-        }
-
-        async function generateProductPitch(productName, salesAmount, qty) {
-            const apiKey = getStoredApiKey();
-            const modal = document.getElementById('pitchModal');
-            const modalTitle = document.getElementById('pitchModalTitle');
-            const loader = document.getElementById('pitchLoader');
-            const content = document.getElementById('pitchContent');
-
-            if (!apiKey) {
-                openAIModal();
-                alert('Ingresa tu Gemini API Key para generar estrategias de venta.');
-                return;
-            }
-
-            if (modalTitle) modalTitle.innerText = `Estrategia IA: ${productName}`;
-            if (modal) modal.classList.remove('hidden');
-            if (loader) loader.classList.remove('hidden');
-            if (content) content.classList.add('hidden');
-
-            const systemPrompt = "Actúa como un estratega de marketing digital y ventas b2b/b2c experto. Genera un pitch comercial de alto impacto.";
-            const userPrompt = `Crea una estrategia comercial para el producto "${productName}".
-Métricas actuales del producto:
-- Ventas Totales: ${formatCurrency(salesAmount)}
-- Unidades Vendidas: ${Math.round(qty)}
-
-Genera:
-1. 🎯 Perfil del Cliente Ideal
-2. 📢 Un Script / Pitch de Venta rápido (3 frases persuasivas)
-3. 📱 Estrategia de Redes Sociales (Copy sugerido e idea visual)
-4. 💡 Oferta o Gancho Promocional recomendado.`;
-
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-            const payload = {
-                contents: [{ parts: [{ text: userPrompt }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] }
-            };
-
-            try {
-                const result = await fetchGeminiAPI(apiUrl, payload);
-                const text = result?.candidates?.[0]?.content?.parts?.[0]?.text || "No se pudo generar la estrategia.";
-                if (content) {
-                    content.innerText = text;
-                    content.classList.remove('hidden');
-                }
-            } catch (err) {
-                if (content) {
-                    content.innerText = "Error al generar estrategia: " + err.message;
-                    content.classList.remove('hidden');
-                }
-            } finally {
-                if (loader) loader.classList.add('hidden');
-            }
-        }
-
-        function closePitchModal() {
-            const modal = document.getElementById('pitchModal');
-            if (modal) modal.classList.add('hidden');
-        }
-
-        function pcmToWav(pcm16, sampleRate = 24000) {
-            const buffer = new ArrayBuffer(44 + pcm16.length * 2);
-            const view = new DataView(buffer);
-            const writeString = (offset, str) => {
-                for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
-            };
-            writeString(0, 'RIFF');
-            view.setUint32(4, 36 + pcm16.length * 2, true);
-            writeString(8, 'WAVE');
-            writeString(12, 'fmt ');
-            view.setUint32(16, 16, true);
-            view.setUint16(20, 1, true);
-            view.setUint16(22, 1, true);
-            view.setUint32(24, sampleRate, true);
-            view.setUint32(28, sampleRate * 2, true);
-            view.setUint16(32, 2, true);
-            view.setUint16(34, 16, true);
-            writeString(36, 'data');
-            view.setUint32(40, pcm16.length * 2, true);
-            for (let i = 0; i < pcm16.length; i++) {
-                view.setInt16(44 + i * 2, pcm16[i], true);
-            }
-            return new Blob([buffer], { type: 'audio/wav' });
-        }
-
-        async function playAIAudioSummary() {
-            const apiKey = getStoredApiKey();
-            if (!lastGeneratedText || !apiKey) return;
-
-            const btnTTS = document.getElementById('btnTTS');
-            const origHTML = btnTTS ? btnTTS.innerHTML : '';
-            if (btnTTS) btnTTS.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sintetizando...';
-
-            const cleanText = "Resumen de ventas: " + lastGeneratedText.replace(/[*#]/g, '').slice(0, 300);
-
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
-
-            const payload = {
-                contents: [{ parts: [{ text: `Say in a professional tone: ${cleanText}` }] }],
-                generationConfig: {
-                    responseModalities: ["AUDIO"],
-                    speechConfig: {
-                        voiceConfig: {
-                            prebuiltVoiceConfig: { voiceName: "Kore" }
-                        }
-                    }
-                }
-            };
-
-            try {
-                const response = await fetchGeminiAPI(apiUrl, payload);
-                const part = response?.candidates?.[0]?.content?.parts?.[0];
-                const base64Audio = part?.inlineData?.data;
-                
-                if (base64Audio) {
-                    const binary = atob(base64Audio);
-                    const len = binary.length;
-                    const bytes = new Uint8Array(len);
-                    for (let i = 0; i < len; i++) bytes[i] = binary.charCodeAt(i);
-                    const pcm16 = new Int16Array(bytes.buffer);
-                    
-                    const wavBlob = pcmToWav(pcm16, 24000);
-                    const audioUrl = URL.createObjectURL(wavBlob);
-                    const audio = new Audio(audioUrl);
-                    audio.play();
-                } else {
-                    alert("No se pudo obtener el archivo de audio.");
-                }
-            } catch (err) {
-                alert("Error al generar audio TTS: " + err.message);
-            } finally {
-                if (btnTTS) btnTTS.innerHTML = origHTML;
+                outputBox.innerText = `❌ Error al conectar con Gemini: ${err.message}`;
             }
         }
     </script>
