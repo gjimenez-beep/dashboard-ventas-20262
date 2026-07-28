@@ -998,6 +998,24 @@
             return isNaN(res) ? 0 : res;
         }
 
+        // Helper function to extract and sum the exact quantity value from a row
+        function getQtyVal(row) {
+            if (!row) return 0;
+            if (columnMapping.qty) {
+                let val = parseNum(getRowValue(row, columnMapping.qty));
+                if (val > 0) return val;
+            }
+            // Loose fallback matching for common quantity column headers
+            for (let key in row) {
+                const cleanKey = key.toLowerCase().trim();
+                if (cleanKey.includes('cantidad') || cleanKey.includes('cant') || cleanKey.includes('unid') || cleanKey === 'qty') {
+                    let val = parseNum(row[key]);
+                    if (val > 0) return val;
+                }
+            }
+            return 1; // Default to 1 unit per transaction if column is absent
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             initTheme();
             if (typeof ChartDataLabels !== 'undefined') {
@@ -1276,7 +1294,8 @@
                 const salesVal = parseNum(getRowValue(row, columnMapping.sales));
                 totalSales += salesVal;
 
-                const qVal = parseNum(getRowValue(row, columnMapping.qty));
+                // Exact sum of the "Cantidad" column
+                const qVal = getQtyVal(row);
                 totalQty += qVal;
 
                 const store = getRowValue(row, columnMapping.store) || 'Sin Especificar';
@@ -1579,7 +1598,7 @@
                 const prod = getRowValue(row, columnMapping.product) || getRowValue(row, columnMapping.productType) || 'Sin Nombre';
                 const pType = getRowValue(row, columnMapping.productType) || '-';
                 const monto = parseNum(getRowValue(row, columnMapping.sales));
-                const cant = parseNum(getRowValue(row, columnMapping.qty));
+                const cant = getQtyVal(row);
 
                 if (!productAgg[prod]) {
                     productAgg[prod] = {
@@ -1689,7 +1708,7 @@
                 let d = parseDateDetails(getRowValue(r, columnMapping.date));
                 if (d.monthIndex !== null && d.monthIndex >= 0 && d.monthIndex < 12) {
                     monthly2026[d.monthIndex] += parseNum(getRowValue(r, columnMapping.sales));
-                    qty2026[d.monthIndex] += parseNum(getRowValue(r, columnMapping.qty));
+                    qty2026[d.monthIndex] += getQtyVal(r);
                 }
             });
 
@@ -1699,7 +1718,7 @@
                 let d = parseDateDetails(getRowValue(r, columnMapping.date));
                 if (d.monthIndex !== null && d.monthIndex >= 0 && d.monthIndex < 12) {
                     monthly2025[d.monthIndex] += parseNum(getRowValue(r, columnMapping.sales));
-                    qty2025[d.monthIndex] += parseNum(getRowValue(r, columnMapping.qty));
+                    qty2025[d.monthIndex] += getQtyVal(r);
                 }
             });
 
@@ -1739,6 +1758,7 @@
                 }
             }
 
+            // Sum of quantity column for 2026 vs 2025
             if (document.getElementById('yoyQty2026')) document.getElementById('yoyQty2026').innerText = Math.round(totalQty2026).toLocaleString('en-US');
             if (document.getElementById('yoyQty2025')) document.getElementById('yoyQty2025').innerText = Math.round(totalQty2025).toLocaleString('en-US');
             if (document.getElementById('yoyQtyDiff')) document.getElementById('yoyQtyDiff').innerText = (qtyDiff >= 0 ? '+' : '') + Math.round(qtyDiff).toLocaleString('en-US');
@@ -1763,7 +1783,7 @@
             filtered2026.forEach(r => {
                 const prod = getRowValue(r, columnMapping.product) || getRowValue(r, columnMapping.productType) || 'Sin Especificar';
                 const sVal = parseNum(getRowValue(r, columnMapping.sales));
-                const qVal = parseNum(getRowValue(r, columnMapping.qty));
+                const qVal = getQtyVal(r);
                 if (!yoyProdMap2026[prod]) yoyProdMap2026[prod] = { sales: 0, qty: 0 };
                 yoyProdMap2026[prod].sales += sVal;
                 yoyProdMap2026[prod].qty += qVal;
@@ -1772,7 +1792,7 @@
             filtered2025Aligned.forEach(r => {
                 const prod = getRowValue(r, columnMapping.product) || getRowValue(r, columnMapping.productType) || 'Sin Especificar';
                 const sVal = parseNum(getRowValue(r, columnMapping.sales));
-                const qVal = parseNum(getRowValue(r, columnMapping.qty));
+                const qVal = getQtyVal(r);
                 if (!yoyProdMap2025[prod]) yoyProdMap2025[prod] = { sales: 0, qty: 0 };
                 yoyProdMap2025[prod].sales += sVal;
                 yoyProdMap2025[prod].qty += qVal;
